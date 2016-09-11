@@ -114,7 +114,7 @@ Successful delete.
 + Response 400 (application/json)
 Failed to include needed ID or headers.
 ##  Flight Telemetry [/flight/{callsign}-{flightNumber}/telemetry]
-### Get current telemetry for flight [GET]
+### Get latest telemetry for a flight [GET]
 + Parameters
     + callsign: gomake (required) - Unique identifier for organization or group doing the launches
     + flightNumber: 1 (required) - Unique identifier for flight under a particular callsign
@@ -141,8 +141,30 @@ Failed to include needed ID or headers.
             "tracker": { "href": "/flight/gomake-1/tracker" }
         }
     }
+### Push new telemetry for a flight [POST]
++ Parameters
+    + callsign: gomake (required) - Unique identifier for organization or group doing the launches
+    + flightNumber: 1 (required) - Unique identifier for flight under a particular callsign
++ Request (application/json)
+    + Body
+    {
+            "imei": 300234063771850,
+            "transmitTime": 2016-08-20T16:50:00Z UTC,
+            "latitude": 42.3347161667,
+            "longitude": -72.6807305,
+            "satellites": 10,
+            "fixQuality": 2,
+            "altitude": 77,
+            "sensors": {
+                "Temperature": -40.02,
+                "Barometer": 338.73,
+                "Sound": 247
+            }
+    }
++ Response 200 (application/json)
+
 ## Flight History [/flight/{callsign}-{flightNumber}/history]
-### Get historical telemetry data [GET]
+### Get telemetry logs for a flight [GET]
 TBD
 ## Registered Trackers [/flight/{callsign}-{flightNumber}/tracker]
 ### Get trackers registered for flight [GET]
