@@ -1,12 +1,10 @@
 # goMake Flight API 1.0
-## Description
 The goMake Flight API provides flight related information and realtime telemetry data for goMake high altitude balloon and other project launches. 
 
-## Authentication
 The goMake Flight API uses [JWT](https://jwt.io/) to provide authorization to a client with a valid *API Key*. The API is currently in *alpha* mode and API Keys must be requested via email to team@gomake.io.
 
-# Flights [/flight]
-## Get a list of flights [GET]
+## Flights [/flight]
+### Get a list of flights [GET]
 Authentication header with a Bearer token containing the JWT token.
 + Request (application/json)
 	+ Headers
@@ -35,8 +33,8 @@ Authentication header with a Bearer token containing the JWT token.
 	+ Schema
 + Response 401 (application/json)
 Unauthorized API Key
-# Flight [/flight/{callsign}-{flightNumber}]
-## Get flight information [GET]
+## Flight [/flight/{callsign}-{flightNumber}]
+### Get flight information [GET]
 Authentication header with a Bearer token containing the JWT token.
 + Parameters
 	+ callsign: gomake (required) - Unique identifier for organization or group doing the launches
@@ -70,7 +68,7 @@ Authentication header with a Bearer token containing the JWT token.
 		{}
 + Response 401 (application/json)
 Unauthorized API Key
-## Add a flight [POST]
+### Add a flight [POST]
 + Request (application/json)
 	+ Body
 		{
@@ -85,7 +83,7 @@ Unauthorized API Key
 Successful request.
 + Response 400 (application/json)
 Failed to include needed flight information or headers.
-## Update flight info [PUT]
+### Update flight info [PUT]
 + Request (application/json)
 	+ Body
 		{
@@ -101,7 +99,7 @@ Failed to include needed flight information or headers.
 Successful request.
 + Response 400 (application/json)
 Failed to include needed flight information or headers.
-## Remove a flight [DELETE]
+### Remove a flight [DELETE]
 + Request (application/json)
 	+ Body
 		{
@@ -112,8 +110,8 @@ Failed to include needed flight information or headers.
 Successful delete.
 + Response 400 (application/json)
 Failed to include needed ID or headers.
-#  Flight Telemetry [/flight/{callsign}-{flightNumber}/telemetry]
-## Get current telemetry for flight [GET]
+##  Flight Telemetry [/flight/{callsign}-{flightNumber}/telemetry]
+### Get current telemetry for flight [GET]
 + Parameters
 	+ callsign: gomake (required) - Unique identifier for organization or group doing the launches
 	+ flightNumber: 1 (required) - Unique identifier for flight under a particular callsign
@@ -140,12 +138,12 @@ Failed to include needed ID or headers.
 			"tracker": { "href": "/flight/gomake-1/tracker" }
 		}
 	}
-# Flight History [/flight/{callsign}-{flightNumber}/history]
-## Get historical telemetry data [GET]
+## Flight History [/flight/{callsign}-{flightNumber}/history]
+### Get historical telemetry data [GET]
 TBD
-# Registered Trackers [/flight/{callsign}-{flightNumber}/tracker]
-## Get trackers registered for flight [GET]
+## Registered Trackers [/flight/{callsign}-{flightNumber}/tracker]
+### Get trackers registered for flight [GET]
 TBD
-# Registered Tracker [/flight/{callsign}-{flightNumber}/tracker/{trackerId}]
-## Get individual tracker information [GET]
+## Registered Tracker [/flight/{callsign}-{flightNumber}/tracker/{trackerId}]
+### Get individual tracker information [GET]
 TBD
