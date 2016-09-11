@@ -1,0 +1,151 @@
+# goMake Flight API 1.0
+## Description
+The goMake Flight API provides flight related information and realtime telemetry data for goMake high altitude balloon and other project launches. 
+
+## Authentication
+The goMake Flight API uses [JWT](https://jwt.io/) to provide authorization to a client with a valid *API Key*. The API is currently in *alpha* mode and API Keys must be requested via email to team@gomake.io.
+
+# Flights [/flight]
+## Get a list of flights [GET]
+Authentication header with a Bearer token containing the JWT token.
++ Request (application/json)
+	+ Headers
+		+ Authentication: (JWT Token)
+	+ Body
+	+ Schema
++ Response 200 (application/json)
+	+ Body
+		{
+			"content": [
+				{ 
+					"id": 1,
+					"callsign": "GOMAKE",
+					"flightNumber": 1
+				},
+				{
+					"id": 2,
+					"callsign": "HOLYOKE",
+					"flightNumber": 2
+				}
+			],
+			"_links": {
+				"self": { "href": "" }
+			}
+		}
+	+ Schema
++ Response 401 (application/json)
+Unauthorized API Key
+# Flight [/flight/{callsign}-{flightNumber}]
+## Get flight information [GET]
+Authentication header with a Bearer token containing the JWT token.
++ Parameters
+	+ callsign: gomake (required) - Unique identifier for organization or group doing the launches
+	+ flightNumber: 1 (required) - Unique identifier for flight under a particular callsign
++ Request (application/json)
+	+ Headers
+	+ Body
+	+ Schema
++ Response 200 (application/json)
+	+ Body
+		{
+			  "content": [
+			     {
+			       "callsign": "GOMAKE",
+			       "flightNumber": 1,
+			       "createdAt": "mm-dd-YYYY",
+			       "launchStartDateTime": "mm-dd-YYYY",
+			       "launchLocation": "-41.123, 107.8543",
+			       "launchAltitude": 70,
+			       "registeredTrackers": [1,13,26]
+			     }    
+			 ],
+			 "_links": {
+			     "self": { "href": "/flight/gomake-1" },
+			     "telemetry": { "href": "/flight/gomake-1/telemetry" },
+			     "tracker": { "href": "/flight/gomake-1/tracker" },
+			     "history": { "href": "/flight/gomake-1/history" }
+			 }
+		}
+	+ Schema
+		{}
++ Response 401 (application/json)
+Unauthorized API Key
+## Add a flight [POST]
++ Request (application/json)
+	+ Body
+		{
+			"callsign": "GOMAKE",
+			"flightNumber": 1,
+			"launchStartDateTime": "mm-dd-YYYY",
+		    "launchLocation": "-41.123, 107.8543",
+		    "launchAltitude": 70
+		}
+	+ Schema
++ Response 200 (application/json)
+Successful request.
++ Response 400 (application/json)
+Failed to include needed flight information or headers.
+## Update flight info [PUT]
++ Request (application/json)
+	+ Body
+		{
+			"id": 1,
+			"callsign": "GOMAKE",
+			"flightNumber": 1,
+			"launchStartDateTime": "mm-dd-YYYY",
+		    "launchLocation": "-41.123, 107.8543",
+		    "launchAltitude": 70
+		}
+	+ Schema
++ Response 200 (application/json)
+Successful request.
++ Response 400 (application/json)
+Failed to include needed flight information or headers.
+## Remove a flight [DELETE]
++ Request (application/json)
+	+ Body
+		{
+			"id": 1
+		}
+	+ Schema
++ Response 200 (application/json)
+Successful delete.
++ Response 400 (application/json)
+Failed to include needed ID or headers.
+#  Flight Telemetry [/flight/{callsign}-{flightNumber}/telemetry]
+## Get current telemetry for flight [GET]
++ Parameters
+	+ callsign: gomake (required) - Unique identifier for organization or group doing the launches
+	+ flightNumber: 1 (required) - Unique identifier for flight under a particular callsign
++ Request (application/json)
++ Response 200 (application/json)
+	+ Body
+	{
+		"content": {
+			"imei": 300234063771850,
+			"transmitTime": 2016-08-20T16:50:00Z UTC,
+			"latitude": 42.3347161667,
+			"longitude": -72.6807305,
+			"satellites": 10,
+			"fixQuality": 2,
+			"altitude": 77,
+			"sensors": {
+				"Temperature": -40.02,
+				"Barometer": 338.73,
+				"Sound": 247
+			}
+		},
+		"_links": {
+			"self": { "href": "/flight/gomake-1/telemetry" },
+			"tracker": { "href": "/flight/gomake-1/tracker" }
+		}
+	}
+# Flight History [/flight/{callsign}-{flightNumber}/history]
+## Get historical telemetry data [GET]
+TBD
+# Registered Trackers [/flight/{callsign}-{flightNumber}/tracker]
+## Get trackers registered for flight [GET]
+TBD
+# Registered Tracker [/flight/{callsign}-{flightNumber}/tracker/{trackerId}]
+## Get individual tracker information [GET]
+TBD
