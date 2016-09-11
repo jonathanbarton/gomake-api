@@ -11,7 +11,7 @@ The goMake Flight API uses [JWT](https://jwt.io/) to provide authorization to a 
 Authentication header with a Bearer token containing the JWT token.
 + Request (application/json)
     + Headers
-        + Authentication: (JWT Token)
+        Authentication: (JWT Token)
     + Body
     + Schema
 + Response 200 (application/json)
@@ -42,6 +42,8 @@ Authentication header with a Bearer token containing the JWT token.
 + Parameters
     + callsign: gomake (required) - Unique identifier for organization or group doing the launches
     + flightNumber: 1 (required) - Unique identifier for flight under a particular callsign
++ Headers
+    Authentication: (JWT Token)
 + Request (application/json)
     + Headers
     + Body
@@ -72,6 +74,8 @@ Authentication header with a Bearer token containing the JWT token.
 + Response 401 (application/json)
 Unauthorized API Key
 ### Add a flight [POST]
++ Headers
+    Authentication: (JWT Token)
 + Request (application/json)
     + Body
         {
@@ -87,6 +91,8 @@ Successful request.
 + Response 400 (application/json)
 Failed to include needed flight information or headers.
 ### Update flight info [PUT]
++ Headers
+    Authentication: (JWT Token)
 + Request (application/json)
     + Body
         {
@@ -103,6 +109,8 @@ Successful request.
 + Response 400 (application/json)
 Failed to include needed flight information or headers.
 ### Remove a flight [DELETE]
++ Headers
+    Authentication: (JWT Token)
 + Request (application/json)
     + Body
         {
@@ -118,6 +126,8 @@ Failed to include needed ID or headers.
 + Parameters
     + callsign: gomake (required) - Unique identifier for organization or group doing the launches
     + flightNumber: 1 (required) - Unique identifier for flight under a particular callsign
++ Headers
+    Authentication: (JWT Token)
 + Request (application/json)
 + Response 200 (application/json)
     + Body
@@ -145,6 +155,8 @@ Failed to include needed ID or headers.
 + Parameters
     + callsign: gomake (required) - Unique identifier for organization or group doing the launches
     + flightNumber: 1 (required) - Unique identifier for flight under a particular callsign
++ Headers
+    Authentication: (JWT Token)
 + Request (application/json)
     + Body
     {
