@@ -8,7 +8,6 @@ The goMake Flight API uses [JWT](https://jwt.io/) to provide authorization to a 
 
 ## Roster [/flight]
 ### Get a list of flights [GET]
-Authentication header with a Bearer token containing the JWT token.
 + Request (application/json)
     + Headers
         Authentication: (JWT Token)
@@ -38,7 +37,6 @@ Authentication header with a Bearer token containing the JWT token.
 Unauthorized API Key
 ## Flights [/flight/{callsign}-{flightNumber}]
 ### Get flight information [GET]
-Authentication header with a Bearer token containing the JWT token.
 + Parameters
     + callsign: gomake (required) - Unique identifier for organization or group doing the launches
     + flightNumber: 1 (required) - Unique identifier for flight under a particular callsign
@@ -90,7 +88,7 @@ Unauthorized API Key
 Successful request.
 + Response 400 (application/json)
 Failed to include needed flight information or headers.
-### Update flight info [PUT]
+### Update flight information [PUT]
 + Headers
     Authentication: (JWT Token)
 + Request (application/json)
@@ -160,24 +158,70 @@ Failed to include needed ID or headers.
 + Request (application/json)
     + Body
     {
-            "imei": 300234063771850,
-            "transmitTime": 2016-08-20T16:50:00Z UTC,
-            "latitude": 42.3347161667,
-            "longitude": -72.6807305,
-            "satellites": 10,
-            "fixQuality": 2,
-            "altitude": 77,
-            "sensors": {
-                "Temperature": -40.02,
-                "Barometer": 338.73,
-                "Sound": 247
-            }
+        "imei": 300234063771850,
+        "transmitTime": 2016-08-20T16:50:00Z UTC,
+        "latitude": 42.3347161667,
+        "longitude": -72.6807305,
+        "satellites": 10,
+        "fixQuality": 2,
+        "altitude": 77,
+        "sensors": {
+            "Temperature": -40.02,
+            "Barometer": 338.73,
+            "Sound": 247
+        }
     }
 + Response 200 (application/json)
 
 ## History [/flight/{callsign}-{flightNumber}/history]
 ### Get telemetry logs for a flight [GET]
-TBD
++ Parameters
+    + callsign: gomake (required) - Unique identifier for organization or group doing the launches
+    + flightNumber: 1 (required) - Unique identifier for flight under a particular callsign
++ Headers
+    Authentication: (JWT Token)
++ Request
+    + Body
+    {
+        "pageLimit": 50,
+        "pageOffset": 0,
+        "filters": {
+            "startDate": 2016-08-20T16:50:00Z UTC,
+            "endDate": 2016-08-20T20:50:00Z UTC
+        }
+    }
++ Response
+    + Body
+    {
+        "content": {
+            "totalCount": 1068,
+            "pageLimit": 50,
+            "pageOffset": 0,
+            "filters": {
+                "startDate": 2016-08-20T16:50:00Z UTC,
+                "endDate": 2016-08-20T20:50:00Z UTC
+            },
+            "results": [
+                {
+                    "imei": 300234063771850,
+                    "transmitTime": 2016-08-20T16:50:00Z UTC,
+                    "latitude": 42.3347161667,
+                    "longitude": -72.6807305,
+                    "satellites": 10,
+                    "fixQuality": 2,
+                    "altitude": 77,
+                    "sensors": {
+                        "Temperature": -40.02,
+                        "Barometer": 338.73,
+                        "Sound": 247
+                    }
+                }
+            ]        
+        }
+        "_links": {
+            "self": { "href": "/flight/gomake-1/history" }
+        }
+    }
 ## Trackers [/flight/{callsign}-{flightNumber}/tracker]
 ### Get trackers registered for flight [GET]
 TBD
