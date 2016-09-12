@@ -6,7 +6,7 @@ The goMake Flight API provides flight related information and realtime telemetry
 
 The goMake Flight API uses [JWT](https://jwt.io/) to provide authorization to a client with a valid *API Key*. The API is currently in *alpha* mode and API Keys must be requested via email to team@gomake.io.
 
-## Roster [/flight]
+## Flight Roster [/flight]
 ### Get a list of flights [GET]
 + Request (application/json)
     + Headers
@@ -37,6 +37,7 @@ The goMake Flight API uses [JWT](https://jwt.io/) to provide authorization to a 
 Unauthorized API Key
 ## Flights [/flight/{callsign}-{flightNumber}]
 ### Get flight information [GET]
+Provides details surrounding a specific flight. A flight in the goMake API is designated by a callsign (i.e. GOMAKE) and a flight number (i.e. '1'). They will often be depicted together, separated by a hyphen (i.e. 'GOMAKE-1').
 + Parameters
     + callsign: gomake (required) - Unique identifier for organization or group doing the launches
     + flightNumber: 1 (required) - Unique identifier for flight under a particular callsign
@@ -72,6 +73,7 @@ Unauthorized API Key
 + Response 401 (application/json)
 Unauthorized API Key
 ### Add a flight [POST]
+Adds a flight to the flight roster. 
 + Headers
     Authentication: (JWT Token)
 + Request (application/json)
