@@ -6,7 +6,7 @@ The goMake Flight API provides flight related information and realtime telemetry
 
 The goMake Flight API uses [JWT](https://jwt.io/) to provide authorization to a client with a valid *API Key*. The API is currently in *alpha* mode and API Keys must be requested via email to team@gomake.io.
 
-## Flights [/flight]
+## Roster [/flight]
 ### Get a list of flights [GET]
 Authentication header with a Bearer token containing the JWT token.
 + Request (application/json)
@@ -36,7 +36,7 @@ Authentication header with a Bearer token containing the JWT token.
     + Schema
 + Response 401 (application/json)
 Unauthorized API Key
-## Flight [/flight/{callsign}-{flightNumber}]
+## Flights [/flight/{callsign}-{flightNumber}]
 ### Get flight information [GET]
 Authentication header with a Bearer token containing the JWT token.
 + Parameters
@@ -121,7 +121,7 @@ Failed to include needed flight information or headers.
 Successful delete.
 + Response 400 (application/json)
 Failed to include needed ID or headers.
-##  Flight Telemetry [/flight/{callsign}-{flightNumber}/telemetry]
+##  Telemetry [/flight/{callsign}-{flightNumber}/telemetry]
 ### Get latest telemetry for a flight [GET]
 + Parameters
     + callsign: gomake (required) - Unique identifier for organization or group doing the launches
@@ -175,12 +175,12 @@ Failed to include needed ID or headers.
     }
 + Response 200 (application/json)
 
-## Flight History [/flight/{callsign}-{flightNumber}/history]
+## History [/flight/{callsign}-{flightNumber}/history]
 ### Get telemetry logs for a flight [GET]
 TBD
-## Registered Trackers [/flight/{callsign}-{flightNumber}/tracker]
+## Trackers [/flight/{callsign}-{flightNumber}/tracker]
 ### Get trackers registered for flight [GET]
 TBD
-## Registered Tracker [/flight/{callsign}-{flightNumber}/tracker/{trackerId}]
+## Tracker [/flight/{callsign}-{flightNumber}/tracker/{trackerId}]
 ### Get individual tracker information [GET]
 TBD
