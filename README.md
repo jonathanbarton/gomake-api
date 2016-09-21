@@ -51,25 +51,7 @@ Basic Commands
 
   ```bash
   # start service via swagger:
-  npm run start
-
-  # start service with mock data:
-  npm run mock
-
-  # lint for js errors across api code and tests:
-  npm run lint
-
-  # run unit tests:
-  npm run test
-
-  # check test coverage:
-  npm run coverage
-
-  # check docs / edit swagger yaml
-  npm run docs
-
-  # check swagger yaml validity:
-  npm run verify
+  gulp serve
 
   ```
 
