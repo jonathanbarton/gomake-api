@@ -1,0 +1,16 @@
+version: '2'
+services:
+  mongo:
+    image: gomake/mongo
+    ports:
+      - "27017:27017"
+  api:
+    image: gomake/api
+    environment:
+      NODE_ENV: development
+      DB: mongodb://mongo/express-mongoose-es6-rest-api-development
+      PORT: 3000
+      JWT_SECRET: 0a6b944d-d2fb-46fc-a85e-0295c986cd9f
+      DOCKER: "true"
+    ports:
+    - "80:3000"
