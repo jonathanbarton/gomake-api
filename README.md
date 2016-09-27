@@ -58,8 +58,9 @@ Basic Commands
 ## API Documentation
 
   API Endpoints fully documented and mockable on Apiary.io:
-
-	[goMake API Documentation](https://docs.gomake.apiary.io) - https://docs.gomake.apiary.io
+  
+  [goMake API Documentation](https://docs.gomake.apiary.io) - https://docs.gomake.apiary.io
+  
 	
 ## Running Unit Tests
 
