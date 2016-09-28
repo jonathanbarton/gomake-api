@@ -4,7 +4,7 @@ from time import sleep
 from datetime import datetime
 import csv
 import requests
-
+from sensors import Sensors
 
 class RockBlock():
 	"""
@@ -18,14 +18,21 @@ class RockBlock():
 		data: 6c617469747564653d34322e33333437313035266c6f6e6769747564653d2d37322e3638303731393833333326616c7469747564653d303030373826736174656c6c697465733d3130266669785f7175616c6974793d3226536f756e643d313337264261726f6d657465723d313030312e34362654656d70657261747572653d34312e3030
 	"""
 	def __init__(self):
+		self.url = 'http://localhost/telemetry'
+		self.timeout_seconds = 10
 		self.coords = []
 		self.imei = None
 		self.momsn = None
 		self.import_coordinates_list()
+		self.sensors = Sensors(self.coords)
 	def send_message(self):
 		payload = self.get_message()
 		print payload
-		r = requests.post(url, data=payload)
+		try:
+			r = requests.post(self.url, data=payload, timeout=self.timeout_seconds)
+			print r.text
+		except requests.exceptions.ConnectionError:
+			print '===send_message failed===' 
 	def get_message(self):
 		message = {
 			'imei':self.get_imei(),
@@ -51,14 +58,14 @@ class RockBlock():
 		return datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ UTC')
 	def get_iridium_latitude(self):
 		if(len(self.coords) > 0):
-			return choice(self.coords)[0]
+			return float(choice(self.coords)[0])
 		else:
-			return self.get_random_iridium_latitude()
+			return float(self.get_random_iridium_latitude())
 	def get_iridium_longitude(self):
 		if(len(self.coords) > 0):
-			return choice(self.coords)[1]
+			return float(choice(self.coords)[1])
 		else:
-			return self.get_random_iridium_longitude()
+			return float(self.get_random_iridium_longitude())
 	def get_random_iridium_latitude(self):
 		num = random() * 180
 		pos = math.floor(random())
@@ -74,7 +81,8 @@ class RockBlock():
 	def get_iridium_cep(self):
 		return "4.0"
 	def get_data(self):
-		return "6c617469747564653d34322e33333437313035266c6f6e6769747564653d2d37322e3638303731393833333326616c7469747564653d303030373826736174656c6c697465733d3130266669785f7175616c6974793d3226536f756e643d313337264261726f6d657465723d313030312e34362654656d70657261747572653d34312e3030"
+		hex_string = self.sensors.get_hex_string()
+		return hex_string
 	def get_random_digits(self, digits):
 		lower_bound = 10 ** (digits - 1)
 		upper_bound = (10 ** digits) - 1
@@ -84,7 +92,7 @@ class RockBlock():
 		with open(filepath, 'rb') as csvfile:
 			coordinate_reader = csv.reader(csvfile, delimiter=',', quotechar='|')
 			for coordinate in coordinate_reader:
-				coordinate_tuple = (coordinate[0], coordinate[1])
+				coordinate_tuple = (coordinate[0], coordinate[1], coordinate[2])
 				self.coords.append(coordinate_tuple)
 
 if __name__ == "__main__":
