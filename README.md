@@ -8,6 +8,8 @@ goMake API Layer
 
 | Feature                                | Summary                                                                                                                                                                                                                                                     |
 |----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Docker | Application is containerized with [Docker](https://www.docker.com/) containers.  |
+| Docker-Compose | Local orchestration is currently done with [Docker-Compose](https://docs.docker.com/compose/). Eventually we will move this to Kubernetes to match production deployment. |
 | ES6 via Babel                  	 	 | ES6 support using [Babel](https://babeljs.io/).  |
 | Authentication via JsonWebToken                  	 	 | Supports authentication using [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken).  |
 | Code Linting               			 | JavaScript code linting is done using [ESLint](http://eslint.org) - a pluggable linter tool for identifying and reporting on patterns in JavaScript. Uses ESLint with [eslint-config-airbnb](https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb), which tries to follow the Airbnb JavaScript style guide.                                                                                                |
@@ -35,6 +37,8 @@ goMake API Layer
   
 ## Getting Started
 
+  Install Docker. See [this](https://docs.docker.com/docker-for-mac/) for help on OS X. Docker Compose comes in for free on OSX.
+
   ```bash
   # install dependencies
   npm install
@@ -50,8 +54,12 @@ goMake API Layer
 Basic Commands
 
   ```bash
-  # start service via swagger:
-  gulp serve
+  # build:
+  gulp
+  # containerize
+  docker build -t gomake/api .
+  # run
+  docker-compose up
 
   ```
 
