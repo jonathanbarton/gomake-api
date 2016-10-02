@@ -10,7 +10,7 @@ describe('## Misc', () => {
   describe('# GET /api/health-check', () => {
     it('should return OK', (done) => {
       request(app)
-        .get('/api/health-check')
+        .get('/health-check')
         .expect(httpStatus.OK)
         .then(res => {
           expect(res.text).to.equal('OK');
@@ -19,10 +19,10 @@ describe('## Misc', () => {
     });
   });
 
-  describe('# GET /api/404', () => {
+  describe('# GET /404', () => {
     it('should return 404 status', (done) => {
       request(app)
-        .get('/api/404')
+        .get('/404')
         .expect(httpStatus.NOT_FOUND)
         .then(res => {
           expect(res.body.message).to.equal('Not Found');
@@ -34,7 +34,7 @@ describe('## Misc', () => {
   describe('# Error Handling', () => {
     it('should handle mongoose CastError - Cast to ObjectId failed', (done) => {
       request(app)
-        .get('/api/users/56z787zzz67fc')
+        .get('/users/56z787zzz67fc')
         .expect(httpStatus.INTERNAL_SERVER_ERROR)
         .then(res => {
           expect(res.body.message).to.equal('Internal Server Error');
@@ -44,7 +44,7 @@ describe('## Misc', () => {
 
     it('should handle express validation error - username is required', (done) => {
       request(app)
-        .post('/api/users')
+        .post('/users')
         .send({
           mobileNumber: '1234567890'
         })
