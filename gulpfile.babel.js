@@ -9,7 +9,7 @@ import * as isparta from 'isparta';
 const plugins = gulpLoadPlugins();
 
 const paths = {
-  js: ['src/**/*.js'],
+  js: ['src/**/*.js', '!src/server/tests/mongoMock/data.js'],
   nonJs: ['./package.json', './.gitignore'],
   tests: 'src/server/tests/*.js',
   cwd: 'src'
@@ -97,9 +97,9 @@ gulp.task('pre-test', () =>
 );
 
 // triggers mocha test with code coverage
-gulp.task('test', ['pre-test', 'set-env'], () => {
+gulp.task('test', ['lint','pre-test', 'set-env'], () => {
   let reporters;
-  let	exitCode = 0;
+  let exitCode = 0;
 
   if (plugins.util.env['code-coverage-reporter']) {
     reporters = [...options.codeCoverage.reporters, plugins.util.env['code-coverage-reporter']];
@@ -135,6 +135,7 @@ gulp.task('test', ['pre-test', 'set-env'], () => {
       process.exit(exitCode);
     });
 });
+
 
 // clean dist, compile js files, copy non-js files and execute tests
 gulp.task('mocha', ['clean'], () => {
