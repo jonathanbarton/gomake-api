@@ -9,9 +9,10 @@ import * as isparta from 'isparta';
 const plugins = gulpLoadPlugins();
 
 const paths = {
-  js: ['./**/*.js', '!dist/**', '!node_modules/**', '!coverage/**'],
+  js: ['src/**/*.js'],
   nonJs: ['./package.json', './.gitignore'],
-  tests: './server/tests/*.js'
+  tests: 'src/server/tests/*.js',
+  cwd: 'src'
 };
 
 const options = {
@@ -60,7 +61,7 @@ gulp.task('copy', () =>
 
 // Compile ES6 to ES5 and copy to dist
 gulp.task('babel', () =>
-  gulp.src([...paths.js, '!gulpfile.babel.js'], { base: '.' })
+  gulp.src([...paths.js, '!gulpfile.babel.js'], { base: paths.cwd })
     .pipe(plugins.newer('dist'))
     .pipe(plugins.sourcemaps.init())
     .pipe(plugins.babel())

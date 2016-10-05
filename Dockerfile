@@ -18,13 +18,7 @@ RUN npm install -g gulp
 
 # Bundle app source
 COPY gulpfile.babel.js /usr/src/app
-COPY index.js /usr/src/app
-
-RUN mkdir /usr/src/app/config
-COPY config /usr/src/app/config
-
-RUN mkdir /usr/src/app/server
-COPY server /usr/src/app/server
+COPY src /usr/src/app/src
 
 RUN npm run build
 
