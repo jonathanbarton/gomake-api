@@ -6,6 +6,7 @@
 *.log
 dist
 .idea
+data.js
 
 # Logs
 logs
