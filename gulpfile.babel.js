@@ -5,6 +5,8 @@ import del from 'del';
 import runSequence from 'run-sequence';
 import babelCompiler from 'babel-core/register';
 import * as isparta from 'isparta';
+import tar from 'gulp-tar';
+import Docker from 'dockerode';
 
 const plugins = gulpLoadPlugins();
 
@@ -12,7 +14,9 @@ const paths = {
   js: ['src/**/*.js', '!src/server/tests/mongoMock/data.js'],
   nonJs: ['./package.json', './.gitignore'],
   tests: 'src/server/tests/*.js',
-  cwd: 'src'
+  cwd: 'src',
+  tmp: 'temp',
+  image: ['Dockerfile', 'gulpfile.babel.js', 'package.json', 'src']
 };
 
 const options = {
@@ -136,7 +140,6 @@ gulp.task('test', ['lint','pre-test', 'set-env'], () => {
     });
 });
 
-
 // clean dist, compile js files, copy non-js files and execute tests
 gulp.task('mocha', ['clean'], () => {
   runSequence(
@@ -147,6 +150,39 @@ gulp.task('mocha', ['clean'], () => {
 
 // gulp serve for development
 gulp.task('serve', ['clean'], () => runSequence('nodemon'));
+
+const buildImage = (path, spec) => new Promise((resolve, reject) => {
+  const docker = new Docker();
+  docker.buildImage(path, spec, (err, response) => {
+    if (err) {
+      console.log(err);
+    }
+    response.pipe(process.stdout);
+    response.on('error', reject)
+    response.on('end', () => {
+      console.log(`Finished building image: ${spec.t}`);
+      resolve();
+    });
+  });
+});
+
+gulp.task('image-tar', () => {
+  return gulp.src(paths.image)
+    .pipe(tar('gomake-api.tar'))
+    .pipe(gulp.dest(paths.tmp))
+});
+
+gulp.task('image-build', () => {
+  return buildImage(path.join(paths.tmp, 'gomake-api.tar'), {t: 'gomake/api'});
+});
+
+gulp.task('image-cleanup', () => {
+  del(paths.tmp);
+})
+
+gulp.task('image', () => {
+  runSequence('image-tar', 'image-build', 'image-cleanup');
+});
 
 // default task: clean dist, compile js files and copy non-js files.
 gulp.task('default', ['clean'], () => {
