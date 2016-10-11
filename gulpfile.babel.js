@@ -13,7 +13,7 @@ const plugins = gulpLoadPlugins();
 const paths = {
   js: ['src/**/*.js', '!src/server/tests/mongoMock/data.js'],
   nonJs: ['./package.json', './.gitignore'],
-  tests: 'src/server/tests/*.js',
+  tests: 'src/server/tests/unit/*.js',
   cwd: 'src',
   tmp: 'temp',
   image: ['Dockerfile', 'gulpfile.babel.js', 'package.json', 'src']
