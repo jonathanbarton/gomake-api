@@ -1,5 +1,7 @@
 import Joi from 'joi';
 
+const flightName = Joi.string().regex(/^.*\-[1-9][0-9]{0,2}$/).required();
+
 export default {
   // POST /api/users
   createUser: {
@@ -25,6 +27,18 @@ export default {
     body: {
       username: Joi.string().required(),
       password: Joi.string().required()
+    }
+  },
+
+  telemetry: {
+    params: {
+      flightname: flightName
+    }
+  },
+
+  flightInfo: {
+    params: {
+      flightname: flightName
     }
   }
 };

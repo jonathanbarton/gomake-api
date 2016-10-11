@@ -1,17 +1,17 @@
-import Flight from '../models/flight';
+import Telemetry from '../models/telemetry';
 import contentResponse from '../helpers/APIResponse';
 
-function getFlightInfo(req, res) {
+function getTelemetry(req, res) {
   const flightNameArray = req.params.flightname.split('-');
   const callSign = flightNameArray[0];
   const flightNumber = flightNameArray[1];
-  return Flight.findOne({ callSign, flightNumber })
-  .then((err, flight) => {
+  return Telemetry.findOne({ callSign, flightNumber })
+  .then((err, telemetry) => {
     if (err) {
       res.sendStatus(400);
     }
-    res.json(contentResponse(flight));
+    res.json(contentResponse(telemetry));
   });
 }
 
-export default { getFlightInfo };
+export default { getTelemetry };
