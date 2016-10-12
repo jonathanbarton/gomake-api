@@ -1,17 +1,14 @@
 import Flight from '../models/flight';
 import contentResponse from '../helpers/APIResponse';
 
-function list(req, res) {
-  const {
-    limit = 50, skip = 0
-  } = req.query;
+function getFlights(req, res) {
+  const limit = 50;
+  const skip = 0;
 
-  Flight.list({
-    limit, skip
-  }).then((flights) => {
+  return Flight.list(limit, skip).then((flights) => {
     res.json(contentResponse(flights));
   }, (error) => {
     res.json(error);
   });
 }
-export default { list };
+export default { getFlights };

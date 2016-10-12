@@ -18,12 +18,12 @@ FlightSchema.index({
 });
 
 FlightSchema.statics = {
-  list({ skip = 0, limit = 50 } = {}) {
+  list(limit, skip) {
     return this.find()
       .sort()
       .skip(skip)
       .limit(limit)
-      .execAsync();
+      .exec();
   }
 };
 
