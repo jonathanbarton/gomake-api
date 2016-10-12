@@ -1,0 +1,27 @@
+[{
+  "callSign": "MAVERICK",
+  "flightNumber": "1",
+  "createdAt": "2016-02-12",
+  "launchStartDateTime": "2016-02-12:12:00",
+  "launchLocation": "-41.123, 107.8543",
+  "launchAltitude": "70",
+  "registeredTrackers": "[1, 23]"
+},
+{
+  "callSign": "BATMAN",
+  "flightNumber": "1",
+  "createdAt": "2016-03-22",
+  "launchStartDateTime": "2016-08-22:09:00",
+  "launchLocation": "-41.123, 107.8543",
+  "launchAltitude": "70",
+  "registeredTrackers": "[1]"
+},
+{
+  "callSign": "SUPERMAN",
+  "flightNumber": "1",
+  "createdAt": "2016-06-15",
+  "launchStartDateTime": "2016-06-22:10:00",
+  "launchLocation": "-41.123, 107.8543",
+  "launchAltitude": "70",
+  "registeredTrackers": "[2,9,10]"
+}]
