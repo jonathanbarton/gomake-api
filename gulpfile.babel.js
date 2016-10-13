@@ -7,7 +7,10 @@ import babelCompiler from 'babel-core/register';
 import * as isparta from 'isparta';
 import tar from 'gulp-tar';
 import Docker from 'dockerode';
-
+import config from './src/config/env/index';
+const mongoPopulator = require('gulp-mongo-populator');
+const tap = require('gulp-tap');
+const url = require('url');
 const plugins = gulpLoadPlugins();
 
 const paths = {
@@ -190,3 +193,37 @@ gulp.task('default', ['clean'], () => {
     ['copy', 'babel']
   );
 });
+
+//Task to populate the db with data from JSON files.It drops and repopulates as is.
+//Perhaps we can have a mapping model which has jsonArray to true or false for different collections depending on the json.
+gulp.task('populate', ['lint'], () => {
+  let isMongoImportAllowed = toAllowMongoImportOrNot();
+
+  if (isMongoImportAllowed) {
+    let dbName = url.parse(config.db).pathname.replace(/^\//, '')
+    let currentFilePath;
+
+    console.log(`LOG: Adding data to DB ${dbName}`);
+    return gulp.src('src/server/db/*.json')
+      .pipe(tap((file, t) => {
+        currentFilePath = file.path;
+
+        console.log(`LOG: Adding data from file ${currentFilePath}`);
+        return gulp.src(currentFilePath)
+          .pipe(mongoPopulator({
+            db: dbName,
+            drop: true,
+            file: currentFilePath,
+            jsonArray: true,
+          }));
+      }))
+  } else {
+    console.log('LOG: MongoImport disabled on this environment');
+  }
+});
+
+function toAllowMongoImportOrNot(){
+  let env = config.env;
+  let allowedEnvs = ['development','test'];
+  return allowedEnvs.indexOf(env) > -1 ?  true : false;
+}

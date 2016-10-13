@@ -1,8 +1,8 @@
 {
-  "name": "express-mongoose-es6-rest-api",
+  "name": "gomake-api",
   "version": "1.0.0",
-  "description": "A Boilerplate application for building REST APIs using express, mongoose in ES6 with code coverage",
-  "author": "Kunal Kapadia <kunalkapadia12@gmail.com>",
+  "description": "The goMake Flight API provides flight related information and realtime telemetry data for goMake high altitude balloon and other project launches.The goMake Flight API uses JWT to provide authorization to a client with a valid API Key. The API is currently in alpha mode and API Keys must be requested via email to team@gomake.io.",
+  "author": "Jonathan Barton <> ,Morris Singer <>,Neha Abrol <nehaabrol87@gmail.com>",
   "main": "index.js",
   "private": false,
   "engines": {
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:KunalKapadia/express-mongoose-es6-rest-api.git"
+    "url": "git@github.com:GoMake/gomake-api.git"
   },
   "keywords": [
     "express",
@@ -76,10 +76,12 @@
     "gulp-istanbul": "1.0.0",
     "gulp-load-plugins": "^1.2.0",
     "gulp-mocha": "^2.2.0",
+    "gulp-mongo-populator": "^1.0.0",
     "gulp-newer": "^1.1.0",
     "gulp-nodemon": "^2.0.6",
     "gulp-plumber": "^1.0.1",
     "gulp-sourcemaps": "^1.6.0",
+    "gulp-tap": "^0.1.3",
     "gulp-tar": "^1.9.0",
     "gulp-util": "^3.0.7",
     "husky": "^0.11.8",
@@ -93,9 +95,10 @@
     "supertest": "^1.1.0",
     "supertest-as-promised": "3.1.0",
     "tar": "^2.2.1",
+    "url": "^0.11.0",
     "validate-commit-msg": "^2.6.1"
   },
-  "license": "MIT",
+  "license": "GOMAKE",
   "babel": {
     "presets": [
       "es2015",
