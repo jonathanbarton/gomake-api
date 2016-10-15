@@ -9,9 +9,9 @@ import tar from 'gulp-tar';
 import Docker from 'dockerode';
 import config from './src/config/env/index';
 const mongoPopulator = require('gulp-mongo-populator');
-const tap = require('gulp-tap');
 const url = require('url');
 const plugins = gulpLoadPlugins();
+const gomakeMockData = require('gomake-mock-data');
 
 const paths = {
   js: ['src/**/*.js', '!src/server/tests/mongoMock/data.js'],
@@ -201,22 +201,20 @@ gulp.task('populate', ['lint'], () => {
 
   if (isMongoImportAllowed) {
     let dbName = url.parse(config.db).pathname.replace(/^\//, '')
-    let currentFilePath;
+    let filePaths = gomakeMockData.getFilePaths('');
 
     console.log(`LOG: Adding data to DB ${dbName}`);
-    return gulp.src('src/server/db/*.json')
-      .pipe(tap((file, t) => {
-        currentFilePath = file.path;
 
-        console.log(`LOG: Adding data from file ${currentFilePath}`);
-        return gulp.src(currentFilePath)
-          .pipe(mongoPopulator({
-            db: dbName,
-            drop: true,
-            file: currentFilePath,
-            jsonArray: true,
-          }));
-      }))
+    filePaths.forEach((filePath) => {
+      console.log(`LOG: Adding data from file ${filePath}`);
+      return gulp.src(filePath)
+        .pipe(mongoPopulator({
+          db: dbName,
+          drop: true,
+          file: filePath,
+          jsonArray: true,
+        }));
+    });
   } else {
     console.log('LOG: MongoImport disabled on this environment');
   }
