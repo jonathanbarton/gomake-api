@@ -201,7 +201,7 @@ gulp.task('populate', ['lint'], () => {
 
   if (isMongoImportAllowed) {
     let dbName = url.parse(config.db).pathname.replace(/^\//, '')
-    let filePaths = gomakeMockData.getFilePaths('');
+    let filePaths = gomakeMockData.getFilePaths('seeds');
 
     console.log(`LOG: Adding data to DB ${dbName}`);
 

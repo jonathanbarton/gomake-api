@@ -18,6 +18,7 @@
       2,
       "nofunc"
     ],
+    "arrow-body-style": [0],
     // TODO: turn on later
     "comma-dangle": [
       0
