@@ -3,12 +3,11 @@ import mongoose from 'mongoose';
 const FlightSchema = new mongoose.Schema({
   callSign: String,
   flightNumber: Number,
-  createdAt: Date,
   launchStartDateTime: Date,
   launchLocation: String,
   launchAltitude: Number,
   registeredTrackers: Array
-});
+}, { timestamps: true });
 
 FlightSchema.index({
   callSign: 1,
