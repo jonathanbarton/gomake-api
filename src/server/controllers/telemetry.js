@@ -6,11 +6,12 @@ function getTelemetry(req, res) {
   const callSign = flightNameArray[0];
   const flightNumber = flightNameArray[1];
   return Telemetry.findOne({ callSign, flightNumber })
-  .then((err, telemetry) => {
+  .then((telemetry) => {
+    res.json(contentResponse(telemetry));
+  }, (err) => {
     if (err) {
       res.sendStatus(400);
     }
-    res.json(contentResponse(telemetry));
   });
 }
 
