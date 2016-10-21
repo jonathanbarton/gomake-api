@@ -5,8 +5,8 @@ require('sinon-as-promised');
 const telemetryData = require('gomake-mock-data');
 const TelemetryController = require('../../controllers/telemetry');
 
-describe('Telemetry', () => {
-  describe('model', () => {
+describe('Telemetry Model', () => {
+  describe('#findOne', () => {
     it('should return telemetry data', (done) => {
       const TelemetryMock = sinon.mock(Telemetry);
       const mockTelemetryItem = telemetryData.get('telemetry', 'goodTelemetry', 1)[0];
@@ -19,8 +19,10 @@ describe('Telemetry', () => {
       });
     });
   });
+});
 
-  describe('getTelemetry', () => {
+describe('Telemetry', () => {
+  describe('#getTelemetry - Gets latest telemetry item', () => {
     let req;
     let res;
     beforeEach((done) => {

@@ -13,6 +13,10 @@ const jwtCheck = jwt({
 
 const router = express.Router();	// eslint-disable-line new-cap
 
+router.get('/', (req, res) => {
+  res.send('OK');
+});
+
 /** GET /health-check - Check service health */
 
 router.use(jwtCheck);

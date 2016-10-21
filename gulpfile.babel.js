@@ -203,7 +203,7 @@ gulp.task('default', ['clean'], () => {
 
 //Task to populate the db with data from JSON files.It drops and repopulates as is.
 //Perhaps we can have a mapping model which has jsonArray to true or false for different collections depending on the json.
-gulp.task('populate', ['lint'], () => {
+gulp.task('populate', [], () => {
   let isMongoImportAllowed = toAllowMongoImportOrNot();
 
   if (isMongoImportAllowed) {

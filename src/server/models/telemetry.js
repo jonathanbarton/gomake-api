@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const TelemetrySchema = new mongoose.Schema({
-  imei: String,
+  deviceId: String,
   transmitTime: Date,
   latitude: Number,
   longitude: Number,
@@ -9,6 +9,8 @@ const TelemetrySchema = new mongoose.Schema({
   satellites: Number,
   fixQuality: Number,
   sensors: Array
+}, {
+  collection: 'telemetry'
 });
 
 export default mongoose.model('Telemetry', TelemetrySchema);
