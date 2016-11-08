@@ -1,21 +1,15 @@
 import assert from 'assert';
 const Telemetry = require('../../models/telemetry');
 const sinon = require('sinon');
-// require('sinon-mongoose');
 require('sinon-as-promised');
 const telemetryData = require('gomake-mock-data');
 const TelemetryController = require('../../controllers/telemetry');
 
 describe('Telemetry', () => {
-  /*
-    const Model = sinon.mock(Telemetry);
-    const args = {arg1: val1};
-    Model.expects('findOne').withArgs(findByArgs).resovles('ResolveValue');
-   */
   describe('model', () => {
     it('should return telemetry data', (done) => {
       const TelemetryMock = sinon.mock(Telemetry);
-      const mockTelemetryItem = telemetryData.get('telemetry', 'telemetry', 1)[0];
+      const mockTelemetryItem = telemetryData.get('telemetry', 'goodTelemetry', 1)[0];
       TelemetryMock.expects('findOne').withArgs().resolves(mockTelemetryItem);
       Telemetry.findOne().then((res) => {
         TelemetryMock.verify();
@@ -49,7 +43,7 @@ describe('Telemetry', () => {
     });
 
     it('should return single telemetry object', (done) => {
-      const mockTelemetryItem = telemetryData.get('telemetry', 'telemetry', 1);
+      const mockTelemetryItem = telemetryData.get('telemetry', 'goodTelemetry', 1);
       sinon.stub(Telemetry, 'findOne').returns({
         then: () => {
           return mockTelemetryItem;
