@@ -1,0 +1,33 @@
+machine:
+  services:
+    - docker
+  environment:
+    # Add app engine sdk to pythonpath for local unit tests.
+    PYTHONPATH: ${PATH}:${HOME}/google_appengine
+    # Replace this with your project ID
+    GCLOUD_PROJECT: ${GCLOUD_PROJECT}
+
+dependencies:
+  pre:
+    # Download App Engine SDK
+    # This is not necessary to deploy, its only necessary  to run local tests importing the App Engine SDK
+    - curl -o $HOME/google_appengine_1.9.30.zip https://storage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.30.zip
+    - unzip -q -d $HOME $HOME/google_appengine_1.9.30.zip
+    # Retrieve our secrets from the CircleCI environment
+    - echo $CLIENT_SECRET | base64 --decode > ${HOME}/client-secret.json
+    # vendor our dependencies
+    - npm run build
+    # Make sure gcloud is up to date
+    - gcloud --quiet components update app
+    # authenticate gcloud
+    - gcloud auth activate-service-account --key-file ${HOME}/client-secret.json
+    # Replace <your-project-id>
+    - gcloud config set project $GCLOUD_PROJECT
+  override:
+    - docker build --rm=false -t gcr.io/$GCLOUD_PROJECT/api .
+
+deployment:
+  hub:
+    branch: master
+    commands:
+      - gcloud docker -- push gcr.io/$GCLOUD_PROJECT/api
