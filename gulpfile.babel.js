@@ -8,10 +8,14 @@ import * as isparta from 'isparta';
 import tar from 'gulp-tar';
 import Docker from 'dockerode';
 import config from './src/config/env/index';
+import process from 'process';
+
 const mongoPopulator = require('gulp-mongo-populator');
 const url = require('url');
 const plugins = gulpLoadPlugins();
 const gomakeMockData = require('gomake-mock-data');
+
+const imageName = `gcr.io/${process.env.PROJECT_ID}/api`;
 
 const paths = {
   js: ['src/**/*.js', '!src/server/tests/mongoMock/data.js'],
@@ -26,7 +30,7 @@ const options = {
   codeCoverage: {
     reporters: ['lcov', 'text-summary'],
     thresholds: {
-      global: { statements: 80, branches: 80, functions: 80, lines: 80 }
+      global: { statements: 50, branches: 50, functions: 50, lines: 50 }
     }
   }
 };
@@ -176,7 +180,10 @@ gulp.task('image-tar', () => {
 });
 
 gulp.task('image-build', () => {
-  return buildImage(path.join(paths.tmp, 'gomake-api.tar'), {t: 'gomake/api'});
+  if (typeof process.env.PROJECT_ID === 'undefined') {
+    throw new Error('You must specify a $PROJECT_ID environment variable for gcloud in order to build this image.');
+  }
+  return buildImage(path.join(paths.tmp, 'gomake-api.tar'), {t: imageName});
 });
 
 gulp.task('image-cleanup', () => {
