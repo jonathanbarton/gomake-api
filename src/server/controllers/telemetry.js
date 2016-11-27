@@ -8,7 +8,7 @@ const TELEMETRY_ERROR = 400;
 
 function getTelemetry(req, res) {
   const flightName = req.params.flightname;
-  checkTelemetryCache(flightName, res);
+  return checkTelemetryCache(flightName, res);
 }
 
 function getTelemetryForAssignedDevices(foundFlight) {
@@ -17,24 +17,26 @@ function getTelemetryForAssignedDevices(foundFlight) {
 }
 
 function checkTelemetryCache(flightName, res) {
-  const onCheckTelemetryCache = handleCheckTelemetryCache(flightName, res);
-  telemetryCache.get(flightName, onCheckTelemetryCache);
+  const onCheckTelemetryCache = onCacheResponse(flightName, res);
+  return telemetryCache.get(flightName, onCheckTelemetryCache);
 }
 
-function handleCheckTelemetryCache(flightName, res) {
+function onCacheResponse(flightName, res) {
   return (err, cachedTelemetry) => {
     const sendCachedResponse = sendSuccessResponse(res);
-    const isUncached = (cachedTelemetry === undefined);
     if (err) {
       sendFailureResponse(res);
-    } else if (isUncached) {
-      getUncachedTelemetry(flightName, res);
+    } else if (isUncached(cachedTelemetry)) {
+      sendUncachedTelemetry(flightName, res);
     } else {
       sendCachedResponse(cachedTelemetry);
     }
   };
 }
 
+function isUncached(cacheValue) {
+  return (cacheValue === undefined);
+}
 function sendFailureResponse(res) {
   return () => { res.sendStatus(TELEMETRY_ERROR); };
 }
@@ -43,7 +45,7 @@ function sendSuccessResponse(res) {
   return (telemetry) => { res.json(contentResponse(telemetry)); };
 }
 
-function getUncachedTelemetry(flightName, res) {
+function sendUncachedTelemetry(flightName, res) {
   const getFlight = Flight.getFlightFromFlightName(flightName);
   getFlight
     .then(getTelemetryForAssignedDevices, sendFailureResponse(res))

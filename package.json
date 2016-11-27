@@ -89,6 +89,7 @@
     "isparta": "4.0.0",
     "mocha": "2.5.3",
     "mockgoose": "^6.0.8",
+    "rewire": "^2.5.2",
     "run-sequence": "^1.1.5",
     "sinon": "^1.17.6",
     "sinon-as-promised": "^4.0.2",

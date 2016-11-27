@@ -21,6 +21,7 @@ const paths = {
   js: ['src/**/*.js', '!src/server/tests/mongoMock/data.js'],
   nonJs: ['./package.json', './.gitignore'],
   tests: 'src/server/tests/unit/*.js',
+  coverageTarget: ['src/server/**/*.js', '!src/server/tests/**/*.js'],
   cwd: 'src',
   tmp: 'temp',
   image: ['Dockerfile', 'gulpfile.babel.js', 'package.json', 'src']
@@ -30,7 +31,7 @@ const options = {
   codeCoverage: {
     reporters: ['lcov', 'text-summary'],
     thresholds: {
-      global: { statements: 50, branches: 50, functions: 50, lines: 50 }
+      global: { statements: 60, branches: 50, functions: 50, lines: 40 }
     }
   }
 };
@@ -97,7 +98,7 @@ gulp.task('nodemon', ['lint', 'copy', 'babel'], () =>
 
 // covers files for code coverage
 gulp.task('pre-test', () =>
-  gulp.src([...paths.js, '!gulpfile.babel.js'])
+  gulp.src([...paths.coverageTarget, '!gulpfile.babel.js'])
     // Covering files
     .pipe(plugins.istanbul({
       instrumenter: isparta.Instrumenter,
