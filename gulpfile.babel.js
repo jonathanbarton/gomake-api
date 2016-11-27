@@ -15,7 +15,7 @@ const url = require('url');
 const plugins = gulpLoadPlugins();
 const gomakeMockData = require('gomake-mock-data');
 
-const imageName = `gcr.io/${process.env.PROJECT_ID}/api`;
+const imageName = `gcr.io/${process.env.GCLOUD_PROJECT}/api`;
 
 const paths = {
   js: ['src/**/*.js', '!src/server/tests/mongoMock/data.js'],
@@ -180,8 +180,8 @@ gulp.task('image-tar', () => {
 });
 
 gulp.task('image-build', () => {
-  if (typeof process.env.PROJECT_ID === 'undefined') {
-    throw new Error('You must specify a $PROJECT_ID environment variable for gcloud in order to build this image.');
+  if (typeof process.env.GCLOUD_PROJECT === 'undefined') {
+    throw new Error('You must specify a $GCLOUD_PROJECT environment variable for gcloud in order to build this image.');
   }
   return buildImage(path.join(paths.tmp, 'gomake-api.tar'), {t: imageName});
 });

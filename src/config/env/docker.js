@@ -1,7 +1,7 @@
 export default {
   env: process.env.NODE_ENV,
-  jwtSecret: process.env.JWT_SECRET,
-  jwtAudience: process.env.JWT_AUDIENCE,
-  db: process.env.DB,
-  port: process.env.PORT
+  jwtSecret: process.env.GM_JWT_SECRET,
+  jwtAudience: process.env.GM_JWT_AUDIENCE,
+  db: process.env.GM_DB,
+  port: process.env.GM_PORT
 };
