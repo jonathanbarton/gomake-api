@@ -67,6 +67,7 @@
     "cz-conventional-changelog": "1.1.5",
     "del": "^2.2.0",
     "dockerode": "^2.3.1",
+    "dot-env": "0.0.1",
     "eslint": "^1.10.3",
     "eslint-config-airbnb": "5.0.1",
     "fstream": "^1.0.10",
