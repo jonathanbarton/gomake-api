@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import config from './config/env';
 import app from './config/express';
 import winston from './config/winston';
+const path = require('path');
 
 // promisify mongoose
 Promise.promisifyAll(mongoose);
@@ -19,6 +20,11 @@ mongoose.connection.on('error', () => {
 });
 
 const debug = require('debug')('express-mongoose-es6-rest-api:index');
+
+// view engine setup
+app.set('views', path.join(__dirname, 'server/views'));
+app.set('view engine', 'jade');
+
 
 // listen on port config.port
 app.listen(config.port, () => {
