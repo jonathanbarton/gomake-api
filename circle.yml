@@ -10,6 +10,7 @@ machine:
 dependencies:
   pre:
     - echo $CLIENT_SECRET | base64 --decode > ${HOME}/client-secret.json
+    - npm install
     - npm run build
     - gcloud --quiet components update app
     - gcloud auth activate-service-account --key-file ${HOME}/client-secret.json

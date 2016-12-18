@@ -1,10 +1,19 @@
 import Telemetry from '../models/telemetry';
 import Flight from '../models/flight';
 import contentResponse from '../helpers/APIResponse';
+import RockBlockParser from '../services/parsers/rockblock';
+
+const TELEMETRY_ERROR = 400;
+const TELEMETRY_SUCCESS = 200;
+const TELEMETRY_CACHE_TTL = 120;
+const TELEMETRY_CACHE_CHECK = 125;
+const TELEMETRY_CACHE_OPTIONS = {
+  stdTTL: TELEMETRY_CACHE_TTL,
+  checkperiod: TELEMETRY_CACHE_CHECK
+};
 
 const NodeCache = require('node-cache');
-const telemetryCache = new NodeCache({ stdTTL: 120, checkperiod: 125 });
-const TELEMETRY_ERROR = 400;
+const telemetryCache = new NodeCache(TELEMETRY_CACHE_OPTIONS);
 
 function getTelemetry(req, res) {
   const flightName = req.params.flightname;
@@ -37,6 +46,7 @@ function onCacheResponse(flightName, res) {
 function isUncached(cacheValue) {
   return (cacheValue === undefined);
 }
+
 function sendFailureResponse(res) {
   return () => { res.sendStatus(TELEMETRY_ERROR); };
 }
@@ -60,4 +70,16 @@ function setTelemetryCache(flightName) {
   };
 }
 
-export default { getTelemetry };
+function postTelemetry(req, res) {
+  const parser = new RockBlockParser();
+  const telemetry = parser.getTelemetryFromBody(req.body);
+  return telemetry.save((err) => {
+    if (err) {
+      res.sendStatus(TELEMETRY_ERROR);
+    } else {
+      res.sendStatus(TELEMETRY_SUCCESS);
+    }
+  });
+}
+
+export default { getTelemetry, postTelemetry };
