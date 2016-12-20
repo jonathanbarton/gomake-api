@@ -22,7 +22,7 @@ const paths = {
   nonJs: ['./package.json', './.gitignore'],
   tests: 'src/server/tests/unit/*.js',
   templates: 'src/server/views/**/*.jade',
-  coverageTarget: ['src/server/**/*.js', '!src/server/tests/**/*.js'],
+  coverageTarget: ['src/server/**/*.js', '!src/server/tests/**/*.js', '!src/server/routes/**/*.js'],
   cwd: 'src',
   tmp: 'temp',
   image: ['Dockerfile', 'gulpfile.babel.js', 'package.json', 'src']

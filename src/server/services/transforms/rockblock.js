@@ -24,6 +24,7 @@ function queryStringToObject(decodedData) {
     .filter((pair) => pair.length === 2)
     .reduce((acc, pair) => {
       acc[pair[0]] = pair[1];
+      return acc;
     }, {});
 }
 

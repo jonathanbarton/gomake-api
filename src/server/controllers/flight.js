@@ -3,7 +3,6 @@ import contentResponse from '../helpers/APIResponse';
 
 function getFlightInfo(req, res) {
   const flightName = req.params.flightname;
-  console.log(flightName);
   const getFlight = Flight.getFlightFromFlightName(flightName);
   getFlight.then((flight) => {
     res.json(contentResponse(flight));

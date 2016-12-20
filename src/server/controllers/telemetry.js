@@ -1,7 +1,7 @@
 import Telemetry from '../models/telemetry';
 import Flight from '../models/flight';
 import contentResponse from '../helpers/APIResponse';
-import RockBlockParser from '../services/parsers/rockblock';
+var RockBlockParser = require('../services/parsers/rockblock');
 
 const TELEMETRY_ERROR = 400;
 const TELEMETRY_SUCCESS = 200;
