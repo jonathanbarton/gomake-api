@@ -8,7 +8,7 @@ const TelemetrySchema = new mongoose.Schema({
   altitude: Number,
   satellites: Number,
   fixQuality: Number,
-  sensors: Array
+  sensors: Object
 }, {
   collection: 'telemetry'
 });

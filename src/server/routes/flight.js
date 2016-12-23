@@ -21,4 +21,8 @@ router.route('/:flightname')
 router.route('/:flightname/telemetry')
       .get(validate(paramValidation.telemetry), telemetryCtrl.getTelemetry);
 
+/** POST flight telemetry */
+router.route('/:flightname/telemetry')
+  .post(validate(paramValidation.telemetry), telemetryCtrl.postTelemetry);
+
 export default router;

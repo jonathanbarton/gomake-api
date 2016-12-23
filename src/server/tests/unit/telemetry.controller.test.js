@@ -104,4 +104,38 @@ describe('Telemetry Controller', () => {
       TelemetryController.getTelemetry(req, res);
     });
   });
+  describe('#postTelemetry', () => {
+    let req;
+    let res;
+    let revert;
+    beforeEach((done) => {
+      revert = undefined;
+      req = {
+        params: {
+          flightname: 'BATMAN-1'
+        },
+        body: {}
+      };
+      res = {
+        sendStatus: () => {},
+        json: () => {}
+      };
+      return done();
+    });
+
+    afterEach((done) => {
+      if (revert) { revert(); }
+      done();
+    });
+
+    it('should save the telemetry model returned from the parser', (done) => {
+      const spy = sinon.spy();
+      const stub = sinon.stub().returns({ save: spy });
+      revert = TelemetryController.__set__('RockBlockParser.prototype.getTelemetryFromBody', stub);
+      TelemetryController.postTelemetry(req, res);
+      sinon.assert.calledOnce(stub);
+      sinon.assert.calledOnce(spy);
+      done();
+    });
+  });
 });

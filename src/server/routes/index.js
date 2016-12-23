@@ -1,6 +1,7 @@
 import express from 'express';
 import flightRosterRoutes from './flights';
 import flightRoutes from './flight';
+<<<<<<< HEAD
 import auth0Routes from './auth0';
 import config from '../../config/env';
 const jwt = require('express-jwt');
@@ -8,19 +9,19 @@ const jwt = require('express-jwt');
 const jwtCheck = jwt({
   secret: new Buffer(config.jwtSecret),
   audience: config.jwtAudience
-});
+}); 
+
 const router = express.Router();	// eslint-disable-line new-cap
 
 // router.use(jwtCheck);
 
 router.get('/', (req, res) => {
-  res.send('OK');
+  res.sendStatus(403);
 });
 
-/** GET /health-check - Check service health */
-router.get('/health-check', (req, res) =>
-  res.send('OK')
-);
+router.get('/health-check', (req, res) => {
+  res.send('OK');
+});
 
 // mount flights routes at /flights
 router.use('/flights', jwtCheck, flightRosterRoutes);
