@@ -1,7 +1,6 @@
 import express from 'express';
 import flightRosterRoutes from './flights';
 import flightRoutes from './flight';
-<<<<<<< HEAD
 import auth0Routes from './auth0';
 import config from '../../config/env';
 const jwt = require('express-jwt');
@@ -9,7 +8,7 @@ const jwt = require('express-jwt');
 const jwtCheck = jwt({
   secret: new Buffer(config.jwtSecret),
   audience: config.jwtAudience
-}); 
+});
 
 const router = express.Router();	// eslint-disable-line new-cap
 
