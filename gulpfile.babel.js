@@ -21,6 +21,7 @@ const paths = {
   js: ['src/**/*.js', '!src/server/tests/mongoMock/data.js'],
   nonJs: ['./package.json', './.gitignore'],
   tests: 'src/server/tests/unit/*.js',
+  templates: 'src/server/views/**/*.jade',
   coverageTarget: ['src/server/**/*.js', '!src/server/tests/**/*.js'],
   cwd: 'src',
   tmp: 'temp',
@@ -86,8 +87,13 @@ gulp.task('babel', () =>
     .pipe(gulp.dest('dist'))
 );
 
+gulp.task('templates', ()=> {
+  gulp.src(paths.templates)
+    .pipe(gulp.dest('dist/server/views'))
+});
+
 // Start server with restart on file changes
-gulp.task('nodemon', ['lint', 'copy', 'babel'], () =>
+gulp.task('nodemon', ['lint', 'copy', 'babel','templates'], () =>
   plugins.nodemon({
     script: path.join('dist', 'index.js'),
     ext: 'js',
@@ -198,7 +204,7 @@ gulp.task('image', () => {
 // default task: clean dist, compile js files and copy non-js files.
 gulp.task('default', ['clean'], () => {
   runSequence(
-    ['copy', 'babel']
+    ['copy', 'babel','templates']
   );
 });
 
