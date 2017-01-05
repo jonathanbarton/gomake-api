@@ -2,7 +2,7 @@
 
 module.exports = {
   _pre: 'convertDataToObject',
-  deviceId: { field: 'imei' },
+  deviceId: { field: 'device_id' },
   transmitTime: { field: 'transmit_time' },
   latitude: { field: 'data', transform: 'getLatitude' },
   longitude: { field: 'data', transform: 'getLongitude' },
