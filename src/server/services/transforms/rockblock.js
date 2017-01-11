@@ -2,8 +2,7 @@
 
 module.exports = {
   convertDataToObject,
-  getLatitude,
-  getLongitude,
+  getLocation,
   getAltitude,
   getSatellites,
   getFixQuality,
@@ -37,12 +36,12 @@ function hexToAscii(hexData) {
   return str;
 }
 
-function getLatitude(field) {
-  return field.latitude;
-}
-
-function getLongitude(field) {
-  return field.longitude;
+function getLocation(field) {
+  const coords = {
+    type: 'Point',
+    point: [field.longitude, field.latitude]
+  };
+  return coords;
 }
 
 function getAltitude(field) {
