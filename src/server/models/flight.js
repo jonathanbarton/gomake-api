@@ -1,3 +1,4 @@
+import GeoJSON from 'mongoose-geojson-schema'; //eslint-disable-line
 import mongoose from 'mongoose';
 const flightModelName = 'Flight';
 
@@ -5,7 +6,7 @@ const FlightSchema = new mongoose.Schema({
   callSign: String,
   flightNumber: Number,
   launchStartDateTime: Date,
-  launchLocation: String,
+  launchLocation: mongoose.Schema.Types.GeoJSON,
   launchAltitude: Number,
   registeredTrackers: Array,
   deviceIds: Array
