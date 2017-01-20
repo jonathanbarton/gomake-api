@@ -40,5 +40,11 @@ export default {
     params: {
       flightname: flightName
     }
+  },
+
+  history: {
+    params: {
+      flightname: flightName
+    }
   }
 };
