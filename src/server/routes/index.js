@@ -15,7 +15,7 @@ const router = express.Router();	// eslint-disable-line new-cap
 // router.use(jwtCheck);
 
 router.get('/', (req, res) => {
-  res.sendStatus(403);
+  res.sendStatus(200);
 });
 
 router.get('/health-check', (req, res) => {
