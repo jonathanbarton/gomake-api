@@ -1,11 +1,11 @@
 import path from 'path';
-require('dotenv').config();
 const env = process.env.NODE_ENV || 'development';
 
 let config;
 if (typeof process.env.GM_DOCKER !== 'undefined') {
   config = require('./docker');
 } else {
+  require('dotenv').config();
   config = require(`./${env}`);
 }
 
