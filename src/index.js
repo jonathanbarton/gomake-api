@@ -12,8 +12,9 @@ Promise.promisifyAll(mongoose);
 winston.log('info', 'starting api service.');
 mongoose.connect(config.db, { server: { socketOptions: { keepAlive: 1 } } });
 mongoose.connection.on('error', () => {
-  winston.log('error', `unable to connect to database: ${config.db}`);
-  winston.log('error', 'retrying in 2 seconds.');
+  winston.log('error', `Timestamp: ${new Date()} | ` +
+    `Unable to connect to database: ${config.db} | ` +
+    `Retrying in 2 seconds.`);
   setTimeout(() => {
     mongoose.connect(config.db, { server: { socketOptions: { keepAlive: 1 } } });
   }, 2000);
