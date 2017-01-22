@@ -13,11 +13,10 @@ module.exports = class RockBlock extends Parser {
       modifiedBody = Transforms[Mappings._pre](modifiedBody);
     }
     // perform individual transforms
-    const telemetry = _
-      .filter(Mappings, (telAttribute) => {
-        return telAttribute[0] !== '_';
-      })
-      .reduce(this.reduceToTelemetryObject.bind(modifiedBody), {});
+    const mappingNames = _.keys(Mappings);
+    const attributeNames = _.filter(mappingNames, (name) => name[0] !== '_');
+    const attributes = _.pick(Mappings, attributeNames);
+    const telemetry = _.reduce(attributes, this.reduceToTelemetryObject.bind(modifiedBody), {});
     // perform post data cleanup, if any
     if (Mappings._post) {
       modifiedBody = Transforms[Mappings._post](modifiedBody);
@@ -25,7 +24,7 @@ module.exports = class RockBlock extends Parser {
     return new Telemetry(telemetry);
   }
 
-  reduceToTelemetryObject(acc, telemetryAttribute) {
+  reduceToTelemetryObject(acc, telemetryAttribute, attributeName) {
     const body = this;
     const hasTransform = !!telemetryAttribute['transform'];
     const hasField = !!telemetryAttribute['field'];
@@ -34,10 +33,10 @@ module.exports = class RockBlock extends Parser {
       const transform = Transforms[transformFunctionName];
       const targetName = telemetryAttribute.field;
       const target = body[targetName];
-      acc[telemetryAttribute] = transform(target);
+      acc[attributeName] = transform(target);
     } else {
       if (hasField) {
-        acc[telemetryAttribute] = telemetryAttribute.field;
+        acc[attributeName] = body[telemetryAttribute.field];
       }
     }
     return acc;
