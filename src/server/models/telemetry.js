@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 const TelemetrySchema = new mongoose.Schema({
   deviceId: String,
   transmitTime: Date,
-  location: mongoose.Schema.Types.GeoJSON,
+  location: mongoose.Schema.Types.Point,
   altitude: Number,
   satellites: Number,
   fixQuality: Number,

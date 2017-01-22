@@ -1,12 +1,16 @@
 'use strict';
 
+var GeoJSON  = require('mongoose-geojson-schema'); //eslint-disable-line
+import mongoose from 'mongoose';
+
 module.exports = {
   convertDataToObject,
   getLocation,
   getAltitude,
   getSatellites,
   getFixQuality,
-  getSensorData
+  getSensorData,
+  getTransmitTime
 };
 
 function convertDataToObject(body) {
@@ -37,10 +41,13 @@ function hexToAscii(hexData) {
 }
 
 function getLocation(field) {
-  const coords = {
+  const long = filterFloat(field.longitude);
+  const lat = filterFloat(field.latitude);
+  const point = new mongoose.Schema.Types.Point();
+  const coords = point.cast({
     type: 'Point',
-    point: [field.longitude, field.latitude]
-  };
+    coordinates: [long, lat]
+  });
   return coords;
 }
 
@@ -62,4 +69,16 @@ function getSensorData(field) {
   sensors.barometer = field.Barometer;
   sensors.temperature = field.Temperature;
   return sensors;
+}
+
+function getTransmitTime(field) {
+  const timeString = field.replace('T', ', ');
+  return new Date(timeString);
+}
+
+function filterFloat(value) {
+  if (/^(\-|\+)?([0-9]+(\.[0-9]+)?|Infinity)$/.test(value)) {
+    return Number(value);
+  }
+  return NaN;
 }
