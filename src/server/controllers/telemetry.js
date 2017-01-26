@@ -5,8 +5,8 @@ var RockBlockParser = require('../services/parsers/rockblock');
 
 const TELEMETRY_ERROR = 400;
 const TELEMETRY_SUCCESS = 200;
-const TELEMETRY_CACHE_TTL = 120;
-const TELEMETRY_CACHE_CHECK = 125;
+const TELEMETRY_CACHE_TTL = 60;
+const TELEMETRY_CACHE_CHECK = 65;
 const TELEMETRY_CACHE_OPTIONS = {
   stdTTL: TELEMETRY_CACHE_TTL,
   checkperiod: TELEMETRY_CACHE_CHECK
