@@ -22,7 +22,10 @@ function getTelemetry(req, res) {
 
 function getTelemetryForAssignedDevices(foundFlight) {
   const devices = foundFlight.deviceIds;
-  return Telemetry.findOne({ deviceId: { $in: devices } });
+  return Telemetry
+    .find({ deviceId: { $in: devices } })
+    .sort({ $natural: -1 })
+    .limit(1);
 }
 
 function checkTelemetryCache(flightName, res) {

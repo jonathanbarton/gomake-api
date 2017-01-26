@@ -12,6 +12,11 @@ const router = express.Router();	// eslint-disable-line new-cap
 router.route('/:flightname')
   .get(validate(paramValidation.flightInfo), authentication, flightInfoCtrl.getFlightInfo);
 
+/** POST flight */
+router.route('/:flightname')
+  .post(validate(paramValidation.flightInfo), flightInfoCtrl.postFlightInfo);
+
+
 /** GET flight telemetry */
 router.route('/:flightname/telemetry')
       .get(validate(paramValidation.telemetry), telemetryCtrl.getTelemetry);
