@@ -20,6 +20,8 @@ function parseHeader(header) {
 }
 
 function jwtVerify(req, res, header, done) {
+  console.log("Secret" + jwtSecret);
+  console.log("Audience" + jwtAudience);
   const token = parseHeader(header);
   jwt.verify(token, jwtSecret, { aud: jwtAudience }, (err, decoded) => {
     if (err) {
