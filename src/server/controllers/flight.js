@@ -5,7 +5,7 @@ const FLIGHT_ERROR = 400;
 const FLIGHT_SUCCESS = 200;
 
 function getFlightInfo(req, res) {
-  const flightName = req.params.flightname;
+  const flightName = req.params.flightname.toUpperCase();
   const getFlight = Flight.getFlightFromFlightName(flightName);
   getFlight.then((flight) => {
     res.json(contentResponse(flight));
@@ -15,7 +15,7 @@ function getFlightInfo(req, res) {
 }
 
 function postFlightInfo(req, res) {
-  const flightName = req.params.flightname;
+  const flightName = req.params.flightname.toUpperCase();
   const flightInfo = parseFlightInfo(flightName, req.body);
   const newFlight = new Flight(flightInfo);
   newFlight.save((err) => {

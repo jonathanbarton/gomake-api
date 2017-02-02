@@ -5,7 +5,7 @@ import contentResponse from '../helpers/APIResponse';
 const TELEMETRY_ERROR = 400;
 
 function getFlightHistory(req, res) {
-  const flightName = req.params.flightname;
+  const flightName = req.params.flightname.toUpperCase();
   const getFlight = Flight.getFlightFromFlightName(flightName);
   getFlight
     .then(getHistoryForAssignedDevices, sendFailureResponse(res))
