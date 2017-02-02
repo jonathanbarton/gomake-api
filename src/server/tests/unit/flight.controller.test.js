@@ -8,7 +8,7 @@ require('sinon-as-promised');
 
 describe('Flight', () => {
   const findByArgs = {
-    callSign: 'Gomake',
+    callSign: 'GOMAKE',
     flightNumber: 1
   };
   const FlightController = require('../../controllers/flight');
@@ -48,7 +48,7 @@ describe('Flight', () => {
       flightModelStub = sinon.stub(Flight, 'findOne').returnsPromise();
       req = {
         params: {
-          flightname: 'Gomake-1'
+          flightname: 'gomake-1'
         }
       };
       res = {
