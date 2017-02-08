@@ -24,6 +24,13 @@ function jwtVerify(req, res, header, done) {
   console.log(`Audience ${jwtAudience}`);
   const token = parseHeader(header);
   jwt.verify(token, jwtSecret, { aud: jwtAudience }, (err, decoded) => {
+    console.log('err');
+    console.log(err);
+    console.log('-----');
+    console.log('decoded');
+    console.log(decoded);
+    console.log('=====');
+
     if (err) {
       sendAuthenticationFailure(req, res);
     }
