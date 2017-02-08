@@ -3,7 +3,6 @@
 import config from '../../config/env';
 const jwt = require('jsonwebtoken');
 const jwtSecret = config.jwtSecret;
-const jwtAudience = config.jwtAudience;
 const AUTHENTICATION_FAILURE_STATUS = 401;
 const AUTHENTICATION_FAILURE_MESSAGE = 'Unauthorised';
 
@@ -20,10 +19,8 @@ function parseHeader(header) {
 }
 
 function jwtVerify(req, res, header, done) {
-  console.log(`Secret ${jwtSecret}`);
-  console.log(`Audience ${jwtAudience}`);
   const token = parseHeader(header);
-  jwt.verify(token, jwtSecret, { aud: jwtAudience }, (err, decoded) => {
+  jwt.verify(token, jwtSecret, (err, decoded) => {
     console.log('err');
     console.log(err);
     console.log('-----');
