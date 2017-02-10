@@ -17,7 +17,6 @@ router.route('/:flightname')
 router.route('/:flightname')
   .post(validate(paramValidation.flightInfo), flightInfoCtrl.postFlightInfo);
 
-
 /** GET flight telemetry */
 router.route('/:flightname/telemetry')
       .get(validate(paramValidation.telemetry), telemetryCtrl.getTelemetry);
@@ -34,5 +33,16 @@ router.route('/:flightname/history')
 router.route('/:flightname/chat')
   .post(validate(paramValidation.chat), chat.createFlightChannel);
 
+/** GET flight chat: get group_channel for flight */
+router.route('/:flightname/chat')
+  .get(validate(paramValidation.chat), chat.getFlightChannel);
+
+/** POST flight user ids: create group_channel for flight if does not exist */
+router.route('/:flightname/users/:userId')
+  .post(validate(paramValidation.chat), chat.createFlightChannel);
+
+/** GET flight user ids: get group_channel for flight */
+router.route('/:flightname/users/:userId')
+  .get(validate(paramValidation.chat), chat.getFlightChannel);
 
 export default router;
