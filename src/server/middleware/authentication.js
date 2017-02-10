@@ -1,8 +1,8 @@
 'use strict';
 
 import config from '../../config/env';
-const jwt = require('jsonwebtoken');
-const jwtSecret = config.jwtSecret;
+// MS: const jwt = require('jsonwebtoken');
+// MS: const jwtSecret = config.jwtSecret;
 const AUTHENTICATION_FAILURE_STATUS = 401;
 const AUTHENTICATION_FAILURE_MESSAGE = 'Unauthorised';
 
@@ -15,9 +15,10 @@ function authentication(req, res) {
   // MS: jwtVerify(req, res, header, done);
 }
 
-function parseHeader(header) {
-  return header.split(' ')[1];
-}
+// MS:
+// function parseHeader(header) {
+//   return header.split(' ')[1];
+// }
 
 // MS
 // function jwtVerify(req, res, header, done) {
@@ -42,9 +43,10 @@ function sendAuthenticationFailure(req, res) {
   res.json({ message: AUTHENTICATION_FAILURE_MESSAGE });
 }
 
-function authenticate(req, decoded, done) {
-  req.user = decoded;
-  done();
-}
+// MS:
+// function authenticate(req, decoded, done) {
+//   req.user = decoded;
+//   done();
+// }
 
 module.exports = authentication;
