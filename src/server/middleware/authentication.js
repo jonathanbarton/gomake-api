@@ -29,7 +29,7 @@ function jwtVerify(req, res, header, done) {
     console.log('=====');
 
     if (err) {
-      sendAuthenticationFailure(req, res);
+      return sendAuthenticationFailure(req, res);
     }
     authenticate(req, decoded, done);
   });
