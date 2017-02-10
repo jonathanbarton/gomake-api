@@ -1,8 +1,8 @@
 'use strict';
 
-// MS: import config from '../../config/env';
-// MS: const jwt = require('jsonwebtoken');
-// MS: const jwtSecret = config.jwtSecret;
+import config from '../../config/env';
+const jwt = require('jsonwebtoken');
+const jwtSecret = config.jwtSecret;
 const AUTHENTICATION_FAILURE_STATUS = 401;
 const AUTHENTICATION_FAILURE_MESSAGE = 'Unauthorised';
 
@@ -11,42 +11,38 @@ function authentication(req, res, done) {
   if (!header) {
     return sendAuthenticationFailure(req, res);
   }
-  done(); // MS
-  // MS: jwtVerify(req, res, header, done);
+  jwtVerify(req, res, header, done);
 }
 
-// MS:
-// function parseHeader(header) {
-//   return header.split(' ')[1];
-// }
+function parseHeader(header) {
+  return header.split(' ')[1];
+}
 
-// MS
-// function jwtVerify(req, res, header, done) {
-//   const token = parseHeader(header);
-//   jwt.verify(token, jwtSecret, (err, decoded) => {
-//     console.log('err');
-//     console.log(err);
-//     console.log('-----');
-//     console.log('decoded');
-//     console.log(decoded);
-//     console.log('=====');
+function jwtVerify(req, res, header, done) {
+  const token = parseHeader(header);
+  jwt.verify(token, jwtSecret, (err, decoded) => {
+    console.log('err');
+    console.log(err);
+    console.log('-----');
+    console.log('decoded');
+    console.log(decoded);
+    console.log('=====');
 
-//     if (err) {
-//       sendAuthenticationFailure(req, res);
-//     }
-//     authenticate(req, decoded, done);
-//   });
-// }
+    if (err) {
+      sendAuthenticationFailure(req, res);
+    }
+    authenticate(req, decoded, done);
+  });
+}
 
 function sendAuthenticationFailure(req, res) {
   res.status(AUTHENTICATION_FAILURE_STATUS);
   res.json({ message: AUTHENTICATION_FAILURE_MESSAGE });
 }
 
-// MS:
-// function authenticate(req, decoded, done) {
-//   req.user = decoded;
-//   done();
-// }
+function authenticate(req, decoded, done) {
+  req.user = decoded;
+  done();
+}
 
 module.exports = authentication;
