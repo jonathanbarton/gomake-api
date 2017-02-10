@@ -2,7 +2,7 @@ import express from 'express';
 import flightRosterRoutes from './flights';
 import flightRoutes from './flight';
 import auth0Routes from './auth0';
-import authentication from '../middleware/authentication';
+// MS: import authentication from '../middleware/authentication';
 
 const router = express.Router();	// eslint-disable-line new-cap
 
