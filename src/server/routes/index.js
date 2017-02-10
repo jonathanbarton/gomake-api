@@ -15,7 +15,8 @@ router.get('/health-check', (req, res) => {
 });
 
 // mount flights routes at /flights
-router.use('/flights', authentication, flightRosterRoutes);
+// MS: router.use('/flights', authentication, flightRosterRoutes);
+router.use('/flights', flightRosterRoutes);
 
 // mount flight routes at /flight
 router.use('/flight', flightRoutes);
