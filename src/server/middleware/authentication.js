@@ -1,6 +1,6 @@
 'use strict';
 
-import config from '../../config/env';
+// MS: import config from '../../config/env';
 // MS: const jwt = require('jsonwebtoken');
 // MS: const jwtSecret = config.jwtSecret;
 const AUTHENTICATION_FAILURE_STATUS = 401;
