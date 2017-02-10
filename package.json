@@ -62,6 +62,7 @@
     "passport": "^0.3.2",
     "passport-auth0": "^0.6.0",
     "path": "^0.12.7",
+    "sendbird-nodejs": "^1.0.0",
     "serve-static": "^1.11.1",
     "winston": "^2.1.1"
   },

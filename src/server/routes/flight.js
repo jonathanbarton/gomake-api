@@ -3,6 +3,7 @@ import validate from 'express-validation';
 import telemetryCtrl from '../controllers/telemetry';
 import flightInfoCtrl from '../controllers/flight';
 import historyCtrl from '../controllers/history';
+import chat from '../controllers/chat';
 import paramValidation from '../../config/param-validation';
 import authentication from '../middleware/authentication';
 
@@ -28,5 +29,10 @@ router.route('/:flightname/telemetry')
 /** GET flight telemetry */
 router.route('/:flightname/history')
   .get(validate(paramValidation.history), historyCtrl.getFlightHistory);
+
+/** POST flight chat: create group_channel for flight if does not exist */
+router.route('/:flightname/chat')
+  .post(validate(paramValidation.chat), chat.createFlightChannel);
+
 
 export default router;
