@@ -20,7 +20,7 @@ function parseHeader(header) {
 
 function jwtVerify(req, res, header, done) {
   const token = parseHeader(header);
-  jwt.verify(token, jwtSecret, (err, decoded) => {
+  jwt.verify(token, new Buffer(jwtSecret, 'base64'), (err, decoded) => {
     console.log('err');
     console.log(err);
     console.log('-----');
