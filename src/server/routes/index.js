@@ -2,7 +2,7 @@ import express from 'express';
 import flightRosterRoutes from './flights';
 import flightRoutes from './flight';
 import auth0Routes from './auth0';
-// MS: import authentication from '../middleware/authentication';
+import authentication from '../middleware/authentication';
 
 const router = express.Router();	// eslint-disable-line new-cap
 
@@ -15,8 +15,7 @@ router.get('/health-check', (req, res) => {
 });
 
 // mount flights routes at /flights
-// MS: router.use('/flights', authentication, flightRosterRoutes);
-router.use('/flights', flightRosterRoutes);
+router.use('/flights', authentication, flightRosterRoutes);
 
 // mount flight routes at /flight
 router.use('/flight', flightRoutes);
