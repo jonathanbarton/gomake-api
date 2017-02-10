@@ -11,7 +11,7 @@ function authentication(req, res, done) {
   if (!header) {
     return sendAuthenticationFailure(req, res);
   }
-  jwtVerify(req, res, header, done);
+  //MS: jwtVerify(req, res, header, done);
 }
 
 function parseHeader(header) {
