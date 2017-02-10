@@ -6,12 +6,12 @@
 const AUTHENTICATION_FAILURE_STATUS = 401;
 const AUTHENTICATION_FAILURE_MESSAGE = 'Unauthorised';
 
-// MS: function authentication(req, res, done) {
-function authentication(req, res) {
+function authentication(req, res, done) {
   const header = req.headers['authorization'];
   if (!header) {
     return sendAuthenticationFailure(req, res);
   }
+  done(); // MS
   // MS: jwtVerify(req, res, header, done);
 }
 
