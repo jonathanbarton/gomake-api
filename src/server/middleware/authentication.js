@@ -20,6 +20,8 @@ function parseHeader(header) {
 
 function jwtVerify(req, res, header, done) {
   const token = parseHeader(header);
+  console.log('TOKENNNNN');
+  console.log(token);
   jwt.verify(token, jwtSecret, { algorithms: ['HS256'], type: 'JWT' }, (err, decoded) => {
     console.log('err');
     console.log(err);
