@@ -21,13 +21,6 @@ function parseHeader(header) {
 function jwtVerify(req, res, header, done) {
   const token = parseHeader(header);
   jwt.verify(token, jwtSecret, { algorithms: ['HS256'], type: 'JWT' }, (err, decoded) => {
-    console.log('err');
-    console.log(err);
-    console.log('-----');
-    console.log('decoded');
-    console.log(decoded);
-    console.log('=====');
-
     if (err) {
       return sendAuthenticationFailure(req, res);
     }

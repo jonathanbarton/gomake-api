@@ -61,20 +61,20 @@ describe('Flights', () => {
       });
     });
 
-    // it('should throw an error if uniq constraint is violated', (done) => {
-    //   const query = {
-    //     callSign: 'GOMAKE'
-    //   };
-    //   updatedata(query, {
-    //     callSign: 'MAVERICK',
-    //     flightNumber: 1
-    //   }, (err) => {
-    //     const errorMessage = err.message;
-    //     expect(errorMessage).to.be.equal(`E11000 duplicate key error dup` +
-    //       ` key: { : "MAVERICK", : 1 }`);
-    //     done();
-    //   });
-    // });
+    it('should throw an error if uniq constraint is violated', (done) => {
+      const query = {
+        callSign: 'GOMAKE'
+      };
+      updatedata(query, {
+        callSign: 'MAVERICK',
+        flightNumber: 1
+      }, (err) => {
+        const errorMessage = err.message;
+        expect(errorMessage).to.be.equal(`E11000 duplicate key error dup` +
+          ` key: { : "MAVERICK", : 1 }`);
+        done();
+      });
+    });
 
     it('should update if uniq constraint is not violated', (done) => {
       const query = {
