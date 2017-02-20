@@ -40,10 +40,7 @@ coverage
 build/Release
 
 # Dependency directory
-**/node_modules/*
-!**/node_modules/jsonwebtoken
-!**/node_modules/jws
-!**/node_modules/jwa
+node_modules
 
 # Optional npm cache directory
 .npm

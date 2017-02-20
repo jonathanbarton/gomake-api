@@ -52,7 +52,7 @@
     "http-status": "^0.2.0",
     "jade": "^1.11.0",
     "joi": "8.4.2",
-    "jsonwebtoken": "https://github.com/GoMake/node-jsonwebtoken.git",
+    "jsonwebtoken": "7.1.9",
     "lodash": "^4.17.2",
     "method-override": "^2.3.5",
     "mongoose": "^4.3.7",
