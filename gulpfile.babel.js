@@ -9,11 +9,13 @@ import tar from 'gulp-tar';
 import Docker from 'dockerode';
 import config from './src/config/env/index';
 import process from 'process';
+import jwt from 'jsonwebtoken';
 
 const mongoPopulator = require('gulp-mongo-populator');
 const url = require('url');
 const plugins = gulpLoadPlugins();
 const gomakeMockData = require('gomake-mock-data');
+const jwtSecret = config.jwtSecret;
 
 const imageName = `gcr.io/${process.env.GCLOUD_PROJECT}/api`;
 
@@ -206,6 +208,21 @@ gulp.task('default', ['clean'], () => {
   runSequence(
     ['copy', 'babel','templates']
   );
+});
+
+//Generates new JWT
+gulp.task('createNewToken', [], () => {
+  let data = {
+    name: 'foo',
+    password: 'bar'
+  };
+
+  let token = jwt.sign({
+    data
+  }, jwtSecret, {
+    expiresIn: '1h'
+  });
+  console.log(`GENERATED TOKEN:\n${token}`);
 });
 
 //Task to populate the db with data from JSON files.It drops and repopulates as is.
