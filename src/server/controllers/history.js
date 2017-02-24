@@ -16,10 +16,20 @@ function getFlightHistory(req, res) {
 function getHistoryForAssignedDevices(startTransmitTime) {
   return (foundFlight) => {
     const devices = foundFlight.deviceIds;
-    const startTimeAsDate = new Date(startTransmitTime);
-    return Telemetry.find({ deviceId: { $in: devices }, transmitTime: { $gte: startTimeAsDate } })
-      .sort('-transmitTime');
+    const startTimeAsDate = getStartTimeAsDate(startTransmitTime);
+    return Telemetry.find({
+      deviceId: { $in: devices },
+      transmitTime: { $gte: startTimeAsDate }
+    }).sort('-transmitTime');
   };
+}
+
+function getStartTimeAsDate(startTransmitTime) {
+  const startTimeAsDate = (!!Date.parse(startTransmitTime)) ?
+    new Date(Date.parse(startTransmitTime)) : new Date(0);
+  const timeZoneOffset = (new Date()).getTimezoneOffset() * 60000;
+  const localISOTime = (new Date(startTimeAsDate - timeZoneOffset)).toISOString().slice(0, -1);
+  return localISOTime;
 }
 
 function sendFailureResponse(res) {
