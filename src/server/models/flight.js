@@ -9,7 +9,8 @@ const FlightSchema = new mongoose.Schema({
   launchLocation: mongoose.Schema.Types.GeoJSON,
   launchAltitude: Number,
   registeredTrackers: Array,
-  deviceIds: Array
+  deviceIds: Array,
+  userIds: Array
 }, {
   timestamps: true
 });

@@ -1,12 +1,15 @@
+'use strict';
+
 import Flight from '../models/flight';
 import contentResponse from '../helpers/APIResponse';
 
 const FLIGHT_ERROR = 400;
 const FLIGHT_SUCCESS = 200;
+const DUPLICATE_USER_ERROR = 409;
 
 function getFlightInfo(req, res) {
   const flightName = req.params.flightname.toUpperCase();
-  const getFlight = Flight.getFlightFromFlightName(flightName);
+  const getFlight = getFlightFromFlightName(flightName);
   getFlight.then((flight) => {
     res.json(contentResponse(flight));
   }, (error) => {
@@ -20,9 +23,9 @@ function postFlightInfo(req, res) {
   const newFlight = new Flight(flightInfo);
   newFlight.save((err) => {
     if (err) {
-      res.sendStatus(FLIGHT_ERROR);
+      sendFailureStatus(res, err);
     } else {
-      res.sendStatus(FLIGHT_SUCCESS);
+      sendSuccessStatus(res);
     }
   });
 }
@@ -63,7 +66,64 @@ function isValidGeoJson(location) {
   return !!location.coordinates;
 }
 
+function putUserInFlight(req, res) {
+  const flightName = req.params.flightname.toUpperCase();
+  const userId = req.params.userid;
+  const getFlight = getFlightFromFlightName(flightName);
+  getFlight.then((foundFlight) => {
+    if (!foundFlight) {
+      return sendFailureStatus(res);
+    }
+    foundFlight = addMissingUserIdsProperty(foundFlight);
+    if (hasDuplicateUserId(foundFlight, userId)) {
+      return sendDuplicateFoundStatus(res, userId);
+    }
+    foundFlight = addUserIdToFlightInfo(foundFlight, userId);
+    foundFlight.save();
+    return sendSuccessStatus(res);
+  }, (err) => sendFailureStatus(res, err));
+}
+
+function getFlightFromFlightName(flightName) {
+  return Flight.getFlightFromFlightName(flightName);
+}
+
+function addUserIdToFlightInfo(flight, userId) {
+  flight.userIds.push(userId);
+  return flight;
+}
+
+function addMissingUserIdsProperty(flight) {
+  if (!flight) {
+    return flight;
+  }
+  const isFlightMissingUserIds = !flight.userIds;
+  if (isFlightMissingUserIds) {
+    flight.userIds = [];
+  }
+  return flight;
+}
+
+function hasDuplicateUserId(flight, userId) {
+  return flight.userIds.indexOf(userId) > -1;
+}
+
+function sendSuccessStatus(res) {
+  res.sendStatus(FLIGHT_SUCCESS);
+}
+
+function sendFailureStatus(res, err) {
+  console.log(err);
+  res.sendStatus(FLIGHT_ERROR);
+}
+
+function sendDuplicateFoundStatus(res, userId) {
+  res.send(DUPLICATE_USER_ERROR,
+    contentResponse({ duplicateUserId: userId }));
+}
+
 export default {
   getFlightInfo,
-  postFlightInfo
+  postFlightInfo,
+  putUserInFlight
 };
