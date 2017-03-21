@@ -14,12 +14,12 @@ router.route('/:flightname')
 
 /** POST flight */
 router.route('/:flightname')
-  .post(validate(paramValidation.flightInfo), flightInfoCtrl.postFlightInfo);
+  .post(validate(paramValidation.flightInfo), authentication, flightInfoCtrl.postFlightInfo);
 
 
 /** GET flight telemetry */
 router.route('/:flightname/telemetry')
-      .get(validate(paramValidation.telemetry), telemetryCtrl.getTelemetry);
+      .get(validate(paramValidation.telemetry), authentication, telemetryCtrl.getTelemetry);
 
 /** POST flight telemetry */
 router.route('/:flightname/telemetry')
@@ -27,6 +27,6 @@ router.route('/:flightname/telemetry')
 
 /** GET flight telemetry */
 router.route('/:flightname/history')
-  .get(validate(paramValidation.history), historyCtrl.getFlightHistory);
+  .get(validate(paramValidation.history), authentication, historyCtrl.getFlightHistory);
 
 export default router;
