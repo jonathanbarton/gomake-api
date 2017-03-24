@@ -26,7 +26,7 @@ router.use(session({ resave: true, saveUninitialized: true, secret: config.jwtSe
 router.use('/flights', authentication, flightRosterRoutes);
 
 // mount flight routes at /flight
-router.use('/flight', flightRoutes);
+router.use('/flight', authentication, flightRoutes);
 
 // routes for /login (Just needed for JADE app.Will live in app otherwise.)
 router.use('/login', login);

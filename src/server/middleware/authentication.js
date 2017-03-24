@@ -8,34 +8,36 @@ const AUTHENTICATION_FAILURE_MESSAGE = 'Unauthorised';
 
 function authentication(req, res, done) {
   const header = req.headers['authorization'];
-  if (!header) {
-    return sendAuthenticationFailure(req, res);
+  const query = req.query['authorization'];
+  const token = header ? parseHeader(header) : query;
+
+  if (header || query) {
+    return jwtVerify(req, res, token, done);
   }
-  jwtVerify(req, res, header, done);
+  return sendAuthenticationFailure(req, res);
 }
 
 function parseHeader(header) {
   return header.split(' ')[1];
 }
 
-function jwtVerify(req, res, header, done) {
-  const token = parseHeader(header);
-  jwt.verify(token, jwtSecret, { algorithms: ['HS256'], type: 'JWT' }, (err, decoded) => {
+function jwtVerify(req, res, token, done) {
+  jwt.verify(token, jwtSecret, {
+    algorithms: ['HS256'],
+    type: 'JWT'
+  }, (err) => {
     if (err) {
       return sendAuthenticationFailure(req, res);
     }
-    authenticate(req, decoded, done);
+    done();
   });
 }
 
 function sendAuthenticationFailure(req, res) {
   res.status(AUTHENTICATION_FAILURE_STATUS);
-  res.json({ message: AUTHENTICATION_FAILURE_MESSAGE });
-}
-
-function authenticate(req, decoded, done) {
-  req.user = decoded;
-  done();
+  res.json({
+    message: AUTHENTICATION_FAILURE_MESSAGE
+  });
 }
 
 module.exports = authentication;

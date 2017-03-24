@@ -20,7 +20,7 @@ const imageName = `gcr.io/${process.env.GCLOUD_PROJECT}/api`;
 const paths = {
   js: ['src/**/*.js', '!src/server/tests/mongoMock/data.js'],
   nonJs: ['./package.json', './.gitignore'],
-  tests: 'src/server/tests/unit/*.js',
+  tests: 'src/server/tests/unit/**/*.js',
   templates: 'src/mockClient/views/**/*.jade',
   coverageTarget: ['src/server/**/*.js', '!src/server/tests/**/*.js', '!src/server/routes/**/*.js'],
   cwd: 'src',
