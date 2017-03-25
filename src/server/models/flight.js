@@ -9,7 +9,8 @@ const FlightSchema = new mongoose.Schema({
   launchLocation: mongoose.Schema.Types.GeoJSON,
   launchAltitude: Number,
   registeredTrackers: Array,
-  deviceIds: Array
+  deviceIds: Array,
+  userIds: Array
 }, {
   timestamps: true
 });
@@ -22,11 +23,9 @@ FlightSchema.index({
 });
 
 FlightSchema.statics = {
-  list(limit, skip) {
-    return this.find()
+  list(userId) {
+    return this.find({ userIds: userId })
       .sort()
-      .skip(skip)
-      .limit(limit)
       .exec();
   }
 };
