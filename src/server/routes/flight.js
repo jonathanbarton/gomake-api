@@ -24,8 +24,16 @@ router.route('/:flightname/telemetry')
 router.route('/:flightname/telemetry')
   .post(validate(paramValidation.telemetry), telemetryCtrl.postTelemetry);
 
-/** GET flight telemetry */
+/** GET flight telemetry historical data */
 router.route('/:flightname/history')
   .get(validate(paramValidation.history), historyCtrl.getFlightHistory);
+
+// /** GET flight telemetry historical data */
+// router.route('/:flightname/users')
+//   .get(validate(paramValidation.usersForFlight), userCtrl.getFlightHistory);
+
+/** PUT userId in existing flight */
+router.route('/:flightname/user/:userid')
+  .put(validate(paramValidation.userForFlight), flightInfoCtrl.putUserInFlight);
 
 export default router;
