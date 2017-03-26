@@ -17,7 +17,6 @@ const telemetryCache = new NodeCache(TELEMETRY_CACHE_OPTIONS);
 
 function getTelemetry(req, res) {
   const flightName = req.params.flightname.toUpperCase();
-  console.log(flightName);
   return checkTelemetryCache(flightName, res);
 }
 
@@ -52,8 +51,7 @@ function isUncached(cacheValue) {
 }
 
 function sendFailureResponse(res) {
-  return (err) => {
-    console.log(err);
+  return () => {
     res.sendStatus(TELEMETRY_ERROR);
   };
 }
