@@ -28,4 +28,8 @@ router.route('/:flightname/telemetry')
 router.route('/:flightname/history')
   .get(validate(paramValidation.history), historyCtrl.getFlightHistory);
 
+/** PUT userId in existing flight */
+router.route('/:flightname/user/:userid')
+  .put(validate(paramValidation.userForFlight), flightInfoCtrl.putUserInFlight);
+
 export default router;

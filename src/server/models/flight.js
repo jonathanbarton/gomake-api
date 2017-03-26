@@ -34,12 +34,23 @@ FlightSchema.statics.getFlightFromFlightName = (flightname) => {
   if (!isValidFlightName(flightname)) {
     return null;
   }
-  const flightNameArray = flightname.split('-');
+  const flightNameArray = getFlightNameArray(flightname);
   const callSign = flightNameArray[0];
-  const flightNumber = parseInt(flightNameArray[1], 10);
+  const flightNumber = flightNameArray[1];
   const flightModel = mongoose.model(flightModelName);
   return flightModel.findOne({ callSign, flightNumber });
 };
+
+FlightSchema.statics.getFlightNameArray = (flightname) => {
+  return getFlightNameArray(flightname);
+};
+
+function getFlightNameArray(flightname) {
+  const flightNameArray = flightname.split('-');
+  const callSign = flightNameArray[0];
+  const flightNumber = parseInt(flightNameArray[1], 10);
+  return [callSign, flightNumber];
+}
 
 function isValidFlightName(flightname) {
   return /^.*\-[1-9][0-9]{0,2}$/.test(flightname);
