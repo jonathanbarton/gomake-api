@@ -32,4 +32,8 @@ router.route('/:flightname/history')
 router.route('/:flightname/user/:userid')
   .put(validate(paramValidation.userForFlight), flightInfoCtrl.putUserInFlight);
 
+/** DELETE userId in existing flight */
+router.route('/:flightname/user/:userid')
+  .put(validate(paramValidation.userForFlight), flightInfoCtrl.deleteUserInFlight);
+
 export default router;

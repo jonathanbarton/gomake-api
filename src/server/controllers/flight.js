@@ -65,12 +65,23 @@ function isValidGeoJson(location) {
 }
 
 function putUserInFlight(req, res) {
-  const flightName = req.params.flightname.toUpperCase();
   const userId = getUserId(req.user);
+  const dbUpdateConfig = { $addToSet: { userIds: userId } };
+  return updateFlightUsers(req, res, dbUpdateConfig);
+}
+
+function deleteUserInFlight(req, res) {
+  const userId = getUserId(req.user);
+  const dbUpdateConfig = { $pull: { userIds: userId } };
+  return updateFlightUsers(req, res, dbUpdateConfig);
+}
+
+function updateFlightUsers(req, res, dbUpdateConfig) {
+  const flightName = req.params.flightname.toUpperCase();
   const flightNameArray = Flight.getFlightNameArray(flightName);
   const callSign = flightNameArray[0];
   const flightNumber = flightNameArray[1];
-  return Flight.findOneAndUpdate({ callSign, flightNumber }, { $addToSet: { userIds: userId } })
+  return Flight.findOneAndUpdate({ callSign, flightNumber }, dbUpdateConfig)
     .then((foundFlight) => {
       if (!foundFlight) {
         res.sendStatus(FLIGHT_ERROR);
@@ -96,5 +107,6 @@ function getUserId(user) {
 export default {
   getFlightInfo,
   postFlightInfo,
-  putUserInFlight
+  putUserInFlight,
+  deleteUserInFlight
 };
