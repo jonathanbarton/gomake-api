@@ -3,6 +3,7 @@ import validate from 'express-validation';
 import telemetryCtrl from '../controllers/telemetry';
 import flightInfoCtrl from '../controllers/flight';
 import historyCtrl from '../controllers/history';
+import chat from '../controllers/chat';
 import paramValidation from '../../config/param-validation';
 
 const router = express.Router();	// eslint-disable-line new-cap
@@ -15,7 +16,6 @@ router.route('/:flightname')
 router.route('/:flightname')
   .post(validate(paramValidation.flightInfo), flightInfoCtrl.postFlightInfo);
 
-
 /** GET flight telemetry */
 router.route('/:flightname/telemetry')
       .get(validate(paramValidation.telemetry), telemetryCtrl.getTelemetry);
@@ -27,5 +27,21 @@ router.route('/:flightname/telemetry')
 /** GET flight telemetry */
 router.route('/:flightname/history')
   .get(validate(paramValidation.history), historyCtrl.getFlightHistory);
+
+/** POST flight chat: create group_channel for flight if does not exist */
+router.route('/:flightname/chat')
+  .post(validate(paramValidation.chat), chat.createFlightChannel);
+
+/** GET flight chat: get group_channel for flight */
+router.route('/:flightname/chat')
+  .get(validate(paramValidation.chat), chat.getFlightChannel);
+
+/** POST flight user ids: create group_channel for flight if does not exist */
+router.route('/:flightname/users/:userId')
+  .post(validate(paramValidation.chat), chat.createFlightChannel);
+
+/** GET flight user ids: get group_channel for flight */
+router.route('/:flightname/users/:userId')
+  .get(validate(paramValidation.chat), chat.getFlightChannel);
 
 export default router;

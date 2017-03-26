@@ -9,7 +9,8 @@ const path = require('path');
 Promise.promisifyAll(mongoose);
 
 // connect to mongo db
-winston.log('info', 'starting api service.');
+winston.log('info', 'gomake-api service started');
+
 mongoose.connect(config.db, { server: { socketOptions: { keepAlive: 1 } } });
 mongoose.connection.on('error', () => {
   winston.log('error', `Timestamp: ${new Date()} | ` +

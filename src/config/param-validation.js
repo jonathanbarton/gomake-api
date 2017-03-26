@@ -46,5 +46,11 @@ export default {
     params: {
       flightname: flightName
     }
+  },
+
+  chat: {
+    params: {
+      flightname: flightName
+    }
   }
 };
