@@ -49,10 +49,14 @@ describe('Flight', () => {
       req = {
         params: {
           flightname: 'gomake-1'
+        },
+        user: {
+          user_id: 'google|12345'
         }
       };
       res = {
-        json: () => {}
+        json: () => {},
+        sendStatus: () => {}
       };
       responseSpy = sinon.spy(res, 'json');
       FlightController.getFlightInfo(req, res);
@@ -93,6 +97,18 @@ describe('Flight', () => {
 
       assert(flightSpy.calledWith(findByArgs));
       done();
+    });
+  });
+
+  describe('#putUserInFlight', () => {
+    it('should find and update flight with user_id from JWT', (done) => {
+      sinon.stub(Flight, 'findOneAndUpdate')
+        .returns(Promise.resolve(11));
+      FlightController.putUserInFlight(req, res)
+        .then((result) => {
+          assert.equal(result, 11);
+          done();
+        });
     });
   });
 });

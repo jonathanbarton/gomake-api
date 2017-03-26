@@ -1,5 +1,6 @@
 import Flight from '../models/flight';
 import contentResponse from '../helpers/APIResponse';
+import winston from '../../config/winston';
 
 const FLIGHT_ERROR = 400;
 const FLIGHT_SUCCESS = 200;
@@ -63,7 +64,37 @@ function isValidGeoJson(location) {
   return !!location.coordinates;
 }
 
+function putUserInFlight(req, res) {
+  const flightName = req.params.flightname.toUpperCase();
+  const userId = getUserId(req.user);
+  const flightNameArray = Flight.getFlightNameArray(flightName);
+  const callSign = flightNameArray[0];
+  const flightNumber = flightNameArray[1];
+  return Flight.findOneAndUpdate({ callSign, flightNumber }, { $addToSet: { userIds: userId } })
+    .then((foundFlight) => {
+      if (!foundFlight) {
+        res.sendStatus(FLIGHT_ERROR);
+      }
+      res.sendStatus(FLIGHT_SUCCESS);
+      return foundFlight;
+    })
+    .catch((err) => {
+      winston.log('info', err);
+      res.sendStatus(FLIGHT_ERROR);
+      return err;
+    });
+}
+
+function getUserId(user) {
+  try {
+    return user.user_id;
+  } catch (err) {
+    return false;
+  }
+}
+
 export default {
   getFlightInfo,
-  postFlightInfo
+  postFlightInfo,
+  putUserInFlight
 };
