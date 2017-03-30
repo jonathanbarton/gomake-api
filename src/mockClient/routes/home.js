@@ -18,10 +18,19 @@ function renderResponse(req, res) {
 }
 
 function sendNewToken(req, res) {
-  const newToken = jwt.sign(req.user._json, config.jwtSecret, {
+  const newUser = {
+    email: req.user._json.email,
+    user_id: req.user._json.user_id,
+    roles: req.user._json.roles
+  };
+  const newToken = jwt.sign(newUser, config.jwtSecret, {
     audience: config.jwtAudience
   });
   req.session.token = newToken;
+  console.log('NEW TOKEN: ');
+  console.log('======================================================');
+  console.log(newToken);
+  console.log('======================================================');
   res.render('home');
 }
 
