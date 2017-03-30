@@ -19,6 +19,10 @@ const res = {
   json: () => {}
 };
 
+const user = {
+  name: 'Neha'
+};
+
 describe('Authentication ', () => {
   before((done) => {
     sendAuthenticationFailureStatusSpy = sinon.spy(res, 'status');
@@ -111,6 +115,12 @@ describe('Authentication ', () => {
         });
         done();
       });
+
+      it('should set user in req object', (done) => {
+        authentication(req, res, doneCallback);
+        assert.equal(req.user.name, 'Neha');
+        done();
+      });
     });
 
     describe('when success and query has valid jwt', () => {
@@ -125,7 +135,7 @@ describe('Authentication ', () => {
         done();
       });
 
-      it('should send valid response if header has valid jwt', (done) => {
+      it('should send valid response if query has valid jwt', (done) => {
         authentication(req, res, doneCallback);
         done();
       });
@@ -134,7 +144,7 @@ describe('Authentication ', () => {
 });
 
 function generateJwtToken(hasExpiration) {
-  const newToken = !hasExpiration ? jwt.sign({}, config.jwtSecret) : jwt.sign({},
+  const newToken = !hasExpiration ? jwt.sign(user, config.jwtSecret) : jwt.sign(user,
     config.jwtSecret, {
       expiresIn: '0.1'
     });
