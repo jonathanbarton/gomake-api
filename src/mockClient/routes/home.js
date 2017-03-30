@@ -21,6 +21,7 @@ function sendNewToken(req, res) {
   const newToken = jwt.sign(req.user._json, config.jwtSecret, {
     audience: config.jwtAudience
   });
+  console.log(`TOKEN:  ${newToken}`);
   req.session.token = newToken;
   res.render('home');
 }
