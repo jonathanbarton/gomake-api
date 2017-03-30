@@ -25,12 +25,17 @@ function jwtVerify(req, res, token, done) {
   jwt.verify(token, jwtSecret, {
     algorithms: ['HS256'],
     type: 'JWT'
-  }, (err) => {
+  }, (err, decoded) => {
     if (err) {
       return sendAuthenticationFailure(req, res);
     }
-    done();
+    authenticate(req, decoded, done);
   });
+}
+
+function authenticate(req, decoded, done) {
+  req.user = decoded;
+  done();
 }
 
 function sendAuthenticationFailure(req, res) {
