@@ -147,7 +147,7 @@ describe('Flights', () => {
     it('should call Flight.list (model) method with user_id provided', (done) => {
       const spy = sinon.spy(Flight, 'list');
       FlightController.getFlights(req, res);
-      assert(spy.calledWith('12345'));
+      assert(spy.calledWith('google|12345'));
       done();
     });
   });

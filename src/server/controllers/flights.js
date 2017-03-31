@@ -29,7 +29,7 @@ function getFlights(req, res) {
 
 function getUserId(user) {
   try {
-    return user.user_id.split('|')[1];
+    return user.user_id;
   } catch (e) {
     return false;
   }
