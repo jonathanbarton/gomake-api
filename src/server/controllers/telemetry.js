@@ -2,6 +2,7 @@ import Telemetry from '../models/telemetry';
 import Flight from '../models/flight';
 import contentResponse from '../helpers/APIResponse';
 var RockBlockParser = require('../services/parsers/rockblock');
+import logger from '../utils/logger';
 
 const TELEMETRY_ERROR = 400;
 const TELEMETRY_SUCCESS = 200;
@@ -51,7 +52,8 @@ function isUncached(cacheValue) {
 }
 
 function sendFailureResponse(res) {
-  return () => {
+  return (err) => {
+    logger.logFailure(err);
     res.sendStatus(TELEMETRY_ERROR);
   };
 }
