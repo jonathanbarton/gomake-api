@@ -1,6 +1,8 @@
 'use strict';
 
 import config from '../../config/env';
+import logger from '../utils/logger';
+
 const jwt = require('jsonwebtoken');
 const jwtSecret = config.jwtSecret;
 const AUTHENTICATION_FAILURE_STATUS = 401;
@@ -27,6 +29,7 @@ function jwtVerify(req, res, token, done) {
     type: 'JWT'
   }, (err, decoded) => {
     if (err) {
+      logger.logAuthenticationDenial(req);
       return sendAuthenticationFailure(req, res);
     }
     authenticate(req, decoded, done);
@@ -35,6 +38,7 @@ function jwtVerify(req, res, token, done) {
 
 function authenticate(req, decoded, done) {
   req.user = decoded;
+  logger.logAuthenticationSuccess(req);
   done();
 }
 
