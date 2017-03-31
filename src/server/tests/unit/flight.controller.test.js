@@ -101,12 +101,26 @@ describe('Flight', () => {
   });
 
   describe('#putUserInFlight', () => {
-    it('should find and update flight with user_id from JWT', (done) => {
+    it('should find and update flight with user_id provided', (done) => {
       sinon.stub(Flight, 'findOneAndUpdate')
         .returns(Promise.resolve(11));
       FlightController.putUserInFlight(req, res)
         .then((result) => {
           assert.equal(result, 11);
+          Flight.findOneAndUpdate.restore();
+          done();
+        });
+    });
+  });
+
+  describe('#deleteUserInFlight', () => {
+    it('should find and remove user_id provided from specified flight', (done) => {
+      sinon.stub(Flight, 'findOneAndUpdate')
+        .returns(Promise.resolve(11));
+      FlightController.deleteUserInFlight(req, res)
+        .then((result) => {
+          assert.equal(result, 11);
+          Flight.findOneAndUpdate.restore();
           done();
         });
     });
