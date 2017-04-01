@@ -1,39 +1,28 @@
 import Flight from '../models/flight';
-import contentResponse from '../helpers/APIResponse';
-import logger from '../utils/logger';
-
-const NO_FLIGHTS_ERROR = 'No flights found for user';
-const NO_USERS_ERROR = 'No user_id found';
-const ERROR_STATUS = 404;
+const NO_USERS_ERROR = 'No user_id found in token';
 
 function getFlights(req, res) {
   const user = req.user;
   const userId = getUserId(user);
+
+  if (!userId) {
+    return res.serverError(res, NO_USERS_ERROR);
+  }
   return Flight
     .list(userId)
     .then((flights) => {
-      if (!userId) {
-        throw new Error(NO_USERS_ERROR);
-      }
-      if (!flights) {
-        throw new Error(NO_FLIGHTS_ERROR);
-      }
-      return res.json(contentResponse(flights));
+      return res.ok(res, flights);
     })
     .catch((err) => {
-      logger.logFailure(err);
-      res.status(ERROR_STATUS);
-      res.send(err.message);
+      return res.serverError(res, err);
     });
 }
 
 function getUserId(user) {
-  try {
-    return user.user_id;
-  } catch (e) {
-    logger.logFailure(e);
-    return false;
-  }
+  const userId = user.user_id;
+  return userId;
 }
 
-export default { getFlights };
+export default {
+  getFlights
+};

@@ -1,8 +1,8 @@
 import chai from 'chai';
 import { expect } from 'chai';
 import assert from 'assert';
-const makeMockgooseConnection = require('../../tests/mongooseMock/connection');
-const Flight = require('../../models/flight');
+const makeMockgooseConnection = require('../../../tests/mongooseMock/connection');
+const Flight = require('../../../models/flight');
 const sinon = require('sinon');
 require('sinon-mongoose');
 require('sinon-as-promised');
@@ -115,31 +115,33 @@ describe('Flights', () => {
     let res;
     let fakeData;
     let FlightController;
+    let resOkSpy;
 
     beforeEach((done) => {
-      FlightController = require('../../controllers/flights');
+      FlightController = require('../../../controllers/flights');
       fakeData = 11;
       req = {
         user: { user_id: 'google|12345' }
       };
       res = {
-        status: () => 200,
-        send: () => '{}',
-        json: () => fakeData
+        ok: () => {},
+        serverError: () => {}
       };
+      resOkSpy = sinon.spy(res, 'ok');
       done();
     });
 
     afterEach((done) => {
       Flight.list.restore();
+      resOkSpy.restore();
       done();
     });
 
     it('should call Flight.list (model) method which returns data ', (done) => {
       sinon.stub(Flight, 'list').returns(Promise.resolve(fakeData));
       FlightController.getFlights(req, res)
-        .then((resolvedStub) => {
-          assert.equal(resolvedStub, fakeData);
+        .then(() => {
+          assert(resOkSpy.calledWith(res, fakeData));
           done();
         });
     });
