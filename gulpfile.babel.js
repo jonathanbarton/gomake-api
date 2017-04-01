@@ -9,6 +9,10 @@ import tar from 'gulp-tar';
 import Docker from 'dockerode';
 import config from './src/config/env/index';
 import process from 'process';
+import util from 'gulp-util';
+import plumber from 'gulp-plumber';
+import mocha from 'gulp-mocha';
+import istanbul from 'gulp-istanbul';
 
 const mongoPopulator = require('gulp-mongo-populator');
 const url = require('url');
@@ -20,7 +24,8 @@ const imageName = `gcr.io/${process.env.GCLOUD_PROJECT}/api`;
 const paths = {
   js: ['src/**/*.js', '!src/server/tests/mongoMock/data.js'],
   nonJs: ['./package.json', './.gitignore'],
-  tests: 'src/server/tests/unit/**/*.js',
+  unitTests: 'src/server/tests/unit/**/*.js',
+  integrationTests: 'src/server/tests/integration/**/*.js',
   templates: 'src/mockClient/views/**/*.jade',
   coverageTarget: ['src/server/**/*.js', '!src/server/tests/**/*.js', '!src/server/routes/**/*.js'],
   cwd: 'src',
@@ -114,45 +119,56 @@ gulp.task('pre-test', () =>
     .pipe(plugins.istanbul.hookRequire())
 );
 
-// triggers mocha test with code coverage
-gulp.task('test', ['lint','pre-test', 'set-env'], () => {
-  let reporters;
-  let exitCode = 0;
+gulp.task('unit', ['lint','pre-test'], function() {
+  preprocessForTesting(paths.unitTests, './coverage/unit');
+});
 
-  if (plugins.util.env['code-coverage-reporter']) {
-    reporters = [...options.codeCoverage.reporters, plugins.util.env['code-coverage-reporter']];
+gulp.task('integration', ['lint','pre-test'], function() {
+  preprocessForTesting(paths.integrationTests, './coverage/integration');
+});
+
+function preprocessForTesting(testFiles, coverageDir) {
+  if (process.env.NODE_ENV !== 'prod') {
+    runTest(testFiles, coverageDir);
+  } else {
+    util.log('You can run tests only in non prod envs');
+  }
+}
+
+function runTest(testFiles, coverageDir) {
+  let reporters;
+
+  if (util.env['code-coverage-reporter']) {
+    reporters = [options.codeCoverage.reporters, util.env['code-coverage-reporter']];
   } else {
     reporters = options.codeCoverage.reporters;
   }
-
-  return gulp.src([paths.tests], { read: false })
-    .pipe(plugins.plumber())
-    .pipe(plugins.mocha({
-      reporter: plugins.util.env['mocha-reporter'] || 'spec',
-      ui: 'bdd',
-      timeout: 6000,
-      compilers: {
-        js: babelCompiler
-      }
+  return gulp.src([testFiles])
+    .pipe(plumber())
+    .pipe(mocha({
+      reporter: util.env['mocha-reporter'] || 'spec',
     }))
     .once('error', (err) => {
-      plugins.util.log(err);
-      exitCode = 1;
+      util.log(err);
+      process.exit(1);
     })
-    // Creating the reports after execution of test cases
-    .pipe(plugins.istanbul.writeReports({
-      dir: './coverage',
+    .pipe(istanbul.writeReports({
+      dir: coverageDir,
       reporters
     }))
     // Enforce test coverage
-    .pipe(plugins.istanbul.enforceThresholds({
+    .pipe(istanbul.enforceThresholds({
       thresholds: options.codeCoverage.thresholds
     }))
+    .once('error', (err) => {
+      util.log(err);
+      process.exit(1);
+    })
     .once('end', () => {
-      plugins.util.log('completed !!');
-      process.exit(exitCode);
+      util.log('completed !!');
+      process.exit(0);
     });
-});
+}
 
 // clean dist, compile js files, copy non-js files and execute tests
 gulp.task('mocha', ['clean'], () => {
