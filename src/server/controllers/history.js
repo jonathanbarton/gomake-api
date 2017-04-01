@@ -1,6 +1,7 @@
 import Flight from '../models/flight';
 import Telemetry from '../models/telemetry';
 import contentResponse from '../helpers/APIResponse';
+import logger from '../utils/logger';
 
 const TELEMETRY_ERROR = 400;
 
@@ -33,7 +34,10 @@ function getStartTimeAsDate(startTransmitTime) {
 }
 
 function sendFailureResponse(res) {
-  return () => { res.sendStatus(TELEMETRY_ERROR); };
+  return (err) => {
+    logger.logFailure(err);
+    res.sendStatus(TELEMETRY_ERROR);
+  };
 }
 
 function sendSuccessResponse(res) {

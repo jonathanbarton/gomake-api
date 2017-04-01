@@ -1,6 +1,6 @@
 import Flight from '../models/flight';
 import contentResponse from '../helpers/APIResponse';
-import winston from '../../config/winston';
+import logger from '../utils/logger';
 
 const FLIGHT_ERROR = 400;
 const FLIGHT_SUCCESS = 200;
@@ -10,8 +10,9 @@ function getFlightInfo(req, res) {
   const getFlight = Flight.getFlightFromFlightName(flightName);
   getFlight.then((flight) => {
     res.json(contentResponse(flight));
-  }, (error) => {
-    res.json(error);
+  }, (err) => {
+    logger.logFailure(err);
+    res.json(err);
   });
 }
 
@@ -21,6 +22,7 @@ function postFlightInfo(req, res) {
   const newFlight = new Flight(flightInfo);
   newFlight.save((err) => {
     if (err) {
+      logger.logFailure(err);
       res.sendStatus(FLIGHT_ERROR);
     } else {
       res.sendStatus(FLIGHT_SUCCESS);
@@ -90,7 +92,7 @@ function updateFlightUsers(req, res, dbUpdateConfig) {
       return foundFlight;
     })
     .catch((err) => {
-      winston.log('info', err);
+      logger.logFailure(err);
       res.sendStatus(FLIGHT_ERROR);
       return err;
     });
@@ -100,6 +102,7 @@ function getUserId(user) {
   try {
     return user.user_id;
   } catch (err) {
+    logger.logFailure(err);
     return false;
   }
 }

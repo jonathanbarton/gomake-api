@@ -1,6 +1,6 @@
 import Flight from '../models/flight';
 import contentResponse from '../helpers/APIResponse';
-import winston from '../../config/winston';
+import logger from '../utils/logger';
 
 const NO_FLIGHTS_ERROR = 'No flights found for user';
 const NO_USERS_ERROR = 'No user_id found';
@@ -21,7 +21,7 @@ function getFlights(req, res) {
       return res.json(contentResponse(flights));
     })
     .catch((err) => {
-      winston.log('error', err.message);
+      logger.logFailure(err);
       res.status(ERROR_STATUS);
       res.send(err.message);
     });
@@ -31,6 +31,7 @@ function getUserId(user) {
   try {
     return user.user_id;
   } catch (e) {
+    logger.logFailure(e);
     return false;
   }
 }
