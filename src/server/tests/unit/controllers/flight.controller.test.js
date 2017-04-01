@@ -1,22 +1,35 @@
-import assert from 'assert';
-const Flight = require('../../models/flight');
+const assert = require('assert');
+const Flight = require('../../../models/flight');
 require('sinon-mongoose');
 const sinon = require('sinon');
 const sinonStubPromise = require('sinon-stub-promise');
+const FlightController = require('../../../controllers/flight');
 sinonStubPromise(sinon);
 require('sinon-as-promised');
 
 describe('Flight', () => {
+  const req = {
+    params: {
+      flightname: 'gomake-1'
+    },
+    user: {
+      user_id: 'google|12345'
+    }
+  };
+  const res = {
+    ok: () => {},
+    badRequest: () => {},
+    serverError: () => {}
+  };
   const findByArgs = {
     callSign: 'GOMAKE',
     flightNumber: 1
   };
-  const FlightController = require('../../controllers/flight');
   let FlightMock;
-  let req;
-  let res;
   let flightModelStub;
-  let responseSpy;
+  let resOkSpy;
+  let resServerErrorSpy;
+  let resBadRequestSpy;
 
   describe('#findOne - Model method that returns flightData from db,if present', () => {
     beforeEach((done) => {
@@ -44,47 +57,37 @@ describe('Flight', () => {
   });
 
   describe('#GetFlightInfo -Ctrl method that calls findOne which returns flightInfo', () => {
-    beforeEach((done) => {
+    before((done) => {
       flightModelStub = sinon.stub(Flight, 'findOne').returnsPromise();
-      req = {
-        params: {
-          flightname: 'gomake-1'
-        },
-        user: {
-          user_id: 'google|12345'
-        }
-      };
-      res = {
-        json: () => {},
-        sendStatus: () => {}
-      };
-      responseSpy = sinon.spy(res, 'json');
       FlightController.getFlightInfo(req, res);
       done();
     });
 
-    afterEach((done) => {
+    after((done) => {
       Flight.findOne.restore();
-      res.json.restore();
       done();
     });
 
     it('should call Flight.findOne (model) which returns a resolved promise ', (done) => {
+      resOkSpy = sinon.spy(res, 'ok');
       flightModelStub.resolves('resolved');
 
       flightModelStub().then((arg) => {
-        assert(responseSpy.calledOnce);
+        assert(resOkSpy.calledOnce);
         assert.equal(arg, 'resolved');
+        resOkSpy.restore();
         done();
       });
     });
 
     it('should call Flight.findOne (model)  which returns a rejected promise  ', (done) => {
+      resServerErrorSpy = sinon.spy(res, 'serverError');
       flightModelStub.rejects('rejected');
 
       flightModelStub().then(() => {}, (arg) => {
-        assert(responseSpy.calledOnce);
+        assert(resServerErrorSpy.calledOnce);
         assert.equal(arg, 'rejected');
+        resServerErrorSpy.restore();
         done();
       });
     });
@@ -94,35 +97,71 @@ describe('Flight', () => {
     it('should call Flight.findOne (model) method with callSign and flightNumber', (done) => {
       const flightSpy = sinon.spy(Flight, 'findOne');
       FlightController.getFlightInfo(req, res);
-
       assert(flightSpy.calledWith(findByArgs));
       done();
     });
   });
 
-  describe('#putUserInFlight', () => {
+  describe('#PutUserInFlight', () => {
+    beforeEach((done) => {
+      resOkSpy = sinon.spy(res, 'ok');
+      resBadRequestSpy = sinon.spy(res, 'badRequest');
+      done();
+    });
+    afterEach((done) => {
+      resOkSpy.restore();
+      resBadRequestSpy.restore();
+      done();
+    });
+
     it('should find and update flight with user_id provided', (done) => {
       sinon.stub(Flight, 'findOneAndUpdate')
         .returns(Promise.resolve(11));
       FlightController.putUserInFlight(req, res)
-        .then((result) => {
-          assert.equal(result, 11);
+        .then(() => {
+          assert(resOkSpy.calledWith(res));
           Flight.findOneAndUpdate.restore();
           done();
         });
     });
+
+    it('should return badRequest if no user id is present', (done) => {
+      req.user = {};
+      FlightController.putUserInFlight(req, res);
+      assert(resBadRequestSpy.calledWith(res, 'No valid user Id present'));
+      done();
+    });
   });
 
-  describe('#deleteUserInFlight', () => {
+  describe('#DeleteUserInFlight', () => {
+    beforeEach((done) => {
+      resOkSpy = sinon.spy(res, 'ok');
+      resBadRequestSpy = sinon.spy(res, 'badRequest');
+      done();
+    });
+    afterEach((done) => {
+      resOkSpy.restore();
+      resBadRequestSpy.restore();
+      done();
+    });
     it('should find and remove user_id provided from specified flight', (done) => {
+      req.user = {
+        user_id: 'google|12345'
+      };
       sinon.stub(Flight, 'findOneAndUpdate')
         .returns(Promise.resolve(11));
       FlightController.deleteUserInFlight(req, res)
-        .then((result) => {
-          assert.equal(result, 11);
+        .then(() => {
+          assert(resOkSpy.calledWith(res));
           Flight.findOneAndUpdate.restore();
           done();
         });
+    });
+    it('should return bad request if no user id is present', (done) => {
+      req.user = {};
+      FlightController.deleteUserInFlight(req, res);
+      assert(resBadRequestSpy.calledWith(res, 'No valid user Id present'));
+      done();
     });
   });
 });

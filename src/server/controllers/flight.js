@@ -1,18 +1,16 @@
 import Flight from '../models/flight';
 import contentResponse from '../helpers/APIResponse';
-import logger from '../utils/logger';
 
-const FLIGHT_ERROR = 400;
-const FLIGHT_SUCCESS = 200;
+const NO_VALID_USERID_ERROR = 'No valid user Id present';
+const NO_VALID_FLIGHT_ERROR = 'No valid flight present';
 
 function getFlightInfo(req, res) {
   const flightName = req.params.flightname.toUpperCase();
   const getFlight = Flight.getFlightFromFlightName(flightName);
   getFlight.then((flight) => {
-    res.json(contentResponse(flight));
+    res.ok(res, contentResponse(flight));
   }, (err) => {
-    logger.logFailure(err);
-    res.json(err);
+    res.serverError(res, err);
   });
 }
 
@@ -22,10 +20,9 @@ function postFlightInfo(req, res) {
   const newFlight = new Flight(flightInfo);
   newFlight.save((err) => {
     if (err) {
-      logger.logFailure(err);
-      res.sendStatus(FLIGHT_ERROR);
+      res.serverError(res, err);
     } else {
-      res.sendStatus(FLIGHT_SUCCESS);
+      res.ok(res);
     }
   });
 }
@@ -68,13 +65,27 @@ function isValidGeoJson(location) {
 
 function putUserInFlight(req, res) {
   const userId = getUserId(req.user);
-  const dbUpdateConfig = { $addToSet: { userIds: userId } };
+  if (!userId) {
+    return res.badRequest(res, NO_VALID_USERID_ERROR);
+  }
+  const dbUpdateConfig = {
+    $addToSet: {
+      userIds: userId
+    }
+  };
   return updateFlightUsers(req, res, dbUpdateConfig);
 }
 
 function deleteUserInFlight(req, res) {
-  const userId = getUserId(req.user);
-  const dbUpdateConfig = { $pull: { userIds: userId } };
+  const userId = getUserId(req.user, res);
+  if (!userId) {
+    return res.badRequest(res, NO_VALID_USERID_ERROR);
+  }
+  const dbUpdateConfig = {
+    $pull: {
+      userIds: userId
+    }
+  };
   return updateFlightUsers(req, res, dbUpdateConfig);
 }
 
@@ -86,25 +97,21 @@ function updateFlightUsers(req, res, dbUpdateConfig) {
   return Flight.findOneAndUpdate({ callSign, flightNumber }, dbUpdateConfig)
     .then((foundFlight) => {
       if (!foundFlight) {
-        res.sendStatus(FLIGHT_ERROR);
+        res.badRequest(res, NO_VALID_FLIGHT_ERROR);
+        return false;
       }
-      res.sendStatus(FLIGHT_SUCCESS);
+      res.ok(res);
       return foundFlight;
     })
     .catch((err) => {
-      logger.logFailure(err);
-      res.sendStatus(FLIGHT_ERROR);
+      res.badRequest(res, err);
       return err;
     });
 }
 
 function getUserId(user) {
-  try {
-    return user.user_id;
-  } catch (err) {
-    logger.logFailure(err);
-    return false;
-  }
+  const userId = user.user_id;
+  return userId;
 }
 
 export default {

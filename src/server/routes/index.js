@@ -5,8 +5,9 @@ import flightRoutes from './flight';
 import login from '../../mockClient/routes/login';
 import adminDashboard from '../../mockClient/routes/adminDashboard';
 import home from '../../mockClient/routes/home';
-import authentication from '../middleware/authentication';
+import authentication from '../middlewares/authentication';
 import config from '../../config/env';
+import responseSerialization from '../middlewares/responseSerialization';
 const MAX_AGE = 600000; // milliseconds
 
 const router = express.Router(); // eslint-disable-line new-cap
@@ -21,6 +22,8 @@ router.get('/health-check', (req, res) => {
 
 router.use(session({ resave: true, saveUninitialized: true, secret: config.jwtSecret,
    cookie: { maxAge: MAX_AGE } }));
+
+router.use(responseSerialization);
 
 // mount flights routes at /flights
 router.use('/flights', authentication, flightRosterRoutes);
