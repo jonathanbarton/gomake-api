@@ -1,8 +1,8 @@
 import chai from 'chai';
 import { expect } from 'chai';
 import assert from 'assert';
-const makeMockgooseConnection = require('../../tests/mongooseMock/connection');
-const Flight = require('../../models/flight');
+const makeMockgooseConnection = require('../../../tests/mongooseMock/connection');
+const Flight = require('../../../models/flight');
 const sinon = require('sinon');
 require('sinon-mongoose');
 require('sinon-as-promised');
@@ -117,7 +117,7 @@ describe('Flights', () => {
     let FlightController;
 
     beforeEach((done) => {
-      FlightController = require('../../controllers/flights');
+      FlightController = require('../../../controllers/flights');
       fakeData = 11;
       req = {
         user: { user_id: 'google|12345' }

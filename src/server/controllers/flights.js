@@ -3,7 +3,7 @@ import contentResponse from '../helpers/APIResponse';
 import logger from '../utils/logger';
 
 const NO_FLIGHTS_ERROR = 'No flights found for user';
-const NO_USERS_ERROR = 'No user_id found';
+const NO_USERS_ERROR = 'No user_id found in token';
 const ERROR_STATUS = 404;
 
 function getFlights(req, res) {
