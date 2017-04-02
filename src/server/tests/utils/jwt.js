@@ -7,7 +7,7 @@ const user = {
 };
 
 function generateJwtToken(hasExpiration, hasUserId) {
-  console.log(`SECRET NOT SO SECRET ${config.jwtSecret}`);
+  console.log(`SECRET NOT SO SECRET ${config}`);
   const newUser = hasUserId ? user : {
     name: 'Neha'
   };
