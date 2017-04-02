@@ -174,7 +174,7 @@ function runTest(testFiles, coverageDir) {
 gulp.task('mocha', ['clean'], () => {
   runSequence(
     ['copy', 'babel'],
-    'test'
+    'unit'
   );
 });
 
