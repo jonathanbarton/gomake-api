@@ -1,11 +1,11 @@
-import authentication from '../../../middleware/authentication';
+import authentication from '../../../middlewares/authentication';
+import jwt from 'jsonwebtoken';
 const assert = require('assert');
 const sinon = require('sinon');
 const config = require('../../../../../src/config/env');
-const jwt = require('jsonwebtoken');
-
-let sendAuthenticationFailureStatusSpy;
-let sendAuthenticationFailureJsonSpy;
+const generateJwtToken = require('../../utils/jwt').generateJwtToken;
+let renderAuthernticationFailureSpy;
+let renderAuthernticationSuccessSpy;
 let token;
 
 const req = {
@@ -13,39 +13,35 @@ const req = {
   query: {},
   user: {}
 };
+const doneCallBack = () => {};
 
 const res = {
-  status: () => {},
-  json: () => {}
-};
-
-const user = {
-  name: 'Neha'
+  authenticationFailure: () => {},
+  authenticationSuccess: () => {}
 };
 
 describe('Authentication ', () => {
-  before((done) => {
-    sendAuthenticationFailureStatusSpy = sinon.spy(res, 'status');
-    sendAuthenticationFailureJsonSpy = sinon.spy(res, 'json');
+  beforeEach((done) => {
+    renderAuthernticationFailureSpy = sinon.spy(res, 'authenticationFailure');
     done();
   });
-
-  after((done) => {
-    sendAuthenticationFailureStatusSpy.restore();
-    sendAuthenticationFailureJsonSpy.restore();
+  afterEach((done) => {
+    renderAuthernticationFailureSpy.restore();
     done();
   });
-  describe('authentication() : when failure', () => {
+  describe('authentication() : when failure and no token', () => {
     it('should send unauthorised if header or query  does not have token', (done) => {
       authentication(req, res, done);
-
-      assert(sendAuthenticationFailureStatusSpy.calledWith(401));
-      assert(sendAuthenticationFailureJsonSpy.calledWith({
-        message: 'Unauthorised'
-      }));
+      assert(renderAuthernticationFailureSpy.calledWith(res, req, 'No token present'));
       done();
     });
+  });
 
+  describe('authentication() : when failure and expired token', () => {
+    afterEach((done) => {
+      assert(renderAuthernticationFailureSpy.calledOnce);
+      done();
+    });
     it('should send unauthorised if header has expired token', (done) => {
       const hasExpiration = true;
       token = generateJwtToken(hasExpiration);
@@ -54,38 +50,23 @@ describe('Authentication ', () => {
       };
       req.query = {};
       authentication(req, res, done);
-
-      assert(sendAuthenticationFailureStatusSpy.calledWith(401));
-      assert(sendAuthenticationFailureJsonSpy.calledWith({
-        message: 'Unauthorised'
-      }));
       done();
     });
-
-
     it('should send unauthorised if query has expired token', (done) => {
       req.headers = {};
       req.query = {
         authorization: `Bearer ${token}`
       };
       authentication(req, res, done);
-
-      assert(sendAuthenticationFailureStatusSpy.calledWith(401));
-      assert(sendAuthenticationFailureJsonSpy.calledWith({
-        message: 'Unauthorised'
-      }));
       done();
     });
   });
-  describe('authentication() ', () => {
-    let doneCalled;
+  describe('authentication() : when success ', () => {
     let jwtVerifySpy;
-    const doneCallback = () => {
-      doneCalled = true;
-    };
 
-    describe('when success and header has valid jwt', () => {
+    describe('and header has valid jwt', () => {
       before((done) => {
+        renderAuthernticationSuccessSpy = sinon.spy(res, 'authenticationSuccess');
         token = generateJwtToken();
         jwtVerifySpy = sinon.spy(jwt, 'verify');
         req.query = {};
@@ -94,13 +75,14 @@ describe('Authentication ', () => {
       });
 
       after((done) => {
-        assert.equal(doneCalled, true);
+        assert(renderAuthernticationSuccessSpy.calledWith(req, doneCallBack));
+        renderAuthernticationSuccessSpy.restore();
         jwtVerifySpy.restore();
         done();
       });
 
       it('should send valid response if header has valid jwt', (done) => {
-        authentication(req, res, doneCallback);
+        authentication(req, res, doneCallBack);
         done();
       });
 
@@ -117,36 +99,30 @@ describe('Authentication ', () => {
       });
 
       it('should set user in req object', (done) => {
-        authentication(req, res, doneCallback);
+        authentication(req, res, done);
         assert.equal(req.user.name, 'Neha');
         done();
       });
     });
 
-    describe('when success and query has valid jwt', () => {
+    describe('and query has valid jwt', () => {
       before((done) => {
+        renderAuthernticationSuccessSpy = sinon.spy(res, 'authenticationSuccess');
         req.query['authorization'] = token;
         req.headers = {};
         done();
       });
 
       after((done) => {
-        assert.equal(doneCalled, true);
+        assert(renderAuthernticationSuccessSpy.calledWith(req, doneCallBack));
+        renderAuthernticationSuccessSpy.restore();
         done();
       });
 
       it('should send valid response if query has valid jwt', (done) => {
-        authentication(req, res, doneCallback);
+        authentication(req, res, doneCallBack);
         done();
       });
     });
   });
 });
-
-function generateJwtToken(hasExpiration) {
-  const newToken = !hasExpiration ? jwt.sign(user, config.jwtSecret) : jwt.sign(user,
-    config.jwtSecret, {
-      expiresIn: '0.1'
-    });
-  return newToken;
-}
