@@ -13,12 +13,15 @@ dependencies:
     - npm install
     - node --version
     - npm --version
+    - echo $NODE_ENV
     - npm run build
     - gcloud --quiet components update app
     - gcloud auth activate-service-account --key-file ${HOME}/client-secret.json
     - gcloud config set project $GCLOUD_PROJECT
   override:
     - docker build --rm=false -t gcr.io/$GCLOUD_PROJECT/api .
+  environment:
+    - GM_JWT_SECRET=echo $CLIENT_SECRET | base64 --decode > ${HOME}/client-secret.json
 
 deployment:
   hub:
@@ -28,3 +31,6 @@ deployment:
       - gcloud --quiet components update app
       - gcloud auth activate-service-account --key-file ${HOME}/client-secret.json
       - gcloud docker -- push gcr.io/${GCLOUD_PROJECT}/api
+test:
+  override:
+    - npm test
