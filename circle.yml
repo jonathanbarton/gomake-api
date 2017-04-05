@@ -21,7 +21,7 @@ dependencies:
   override:
     - docker build --rm=false -t gcr.io/$GCLOUD_PROJECT/api .
   environment:
-    - GM_JWT_SECRET=echo $CLIENT_SECRET | base64 --decode > ${HOME}/client-secret.json
+    - GM_JWT_SECRET: 0a6b944d-d2fb-46fc-a85e-0295c986cd9f
 
 deployment:
   hub:
