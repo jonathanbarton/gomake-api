@@ -9,7 +9,8 @@ const FlightSchema = new mongoose.Schema({
   launchLocation: mongoose.Schema.Types.GeoJSON,
   launchAltitude: Number,
   registeredTrackers: Array,
-  deviceIds: Array
+  deviceIds: Array,
+  userIds: Array
 }, {
   timestamps: true
 });
@@ -22,11 +23,9 @@ FlightSchema.index({
 });
 
 FlightSchema.statics = {
-  list(limit, skip) {
-    return this.find()
+  list(userId) {
+    return this.find({ userIds: userId })
       .sort()
-      .skip(skip)
-      .limit(limit)
       .exec();
   }
 };
@@ -35,12 +34,23 @@ FlightSchema.statics.getFlightFromFlightName = (flightname) => {
   if (!isValidFlightName(flightname)) {
     return null;
   }
-  const flightNameArray = flightname.split('-');
+  const flightNameArray = getFlightNameArray(flightname);
   const callSign = flightNameArray[0];
-  const flightNumber = parseInt(flightNameArray[1], 10);
+  const flightNumber = flightNameArray[1];
   const flightModel = mongoose.model(flightModelName);
   return flightModel.findOne({ callSign, flightNumber });
 };
+
+FlightSchema.statics.getFlightNameArray = (flightname) => {
+  return getFlightNameArray(flightname);
+};
+
+function getFlightNameArray(flightname) {
+  const flightNameArray = flightname.split('-');
+  const callSign = flightNameArray[0];
+  const flightNumber = parseInt(flightNameArray[1], 10);
+  return [callSign, flightNumber];
+}
 
 function isValidFlightName(flightname) {
   return /^.*\-[1-9][0-9]{0,2}$/.test(flightname);

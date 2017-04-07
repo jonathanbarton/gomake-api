@@ -1,10 +1,10 @@
 import assert from 'assert';
 const rewire = require('rewire');
-const Telemetry = require('../../models/telemetry');
+const Telemetry = require('../../../models/telemetry');
 const sinon = require('sinon');
 require('sinon-as-promised');
 const telemetryData = require('gomake-mock-data');
-const TelemetryController = rewire('../../controllers/telemetry');
+const TelemetryController = rewire('../../../controllers/telemetry');
 
 describe('Telemetry Model', () => {
   describe('#findOne', () => {

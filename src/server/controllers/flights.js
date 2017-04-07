@@ -1,14 +1,28 @@
 import Flight from '../models/flight';
-import contentResponse from '../helpers/APIResponse';
+const NO_USERS_ERROR = 'No user_id found in token';
 
 function getFlights(req, res) {
-  const limit = 50;
-  const skip = 0;
+  const user = req.user;
+  const userId = getUserId(user);
 
-  return Flight.list(limit, skip).then((flights) => {
-    res.json(contentResponse(flights));
-  }, (error) => {
-    res.json(error);
-  });
+  if (!userId) {
+    return res.serverError(res, NO_USERS_ERROR);
+  }
+  return Flight
+    .list(userId)
+    .then((flights) => {
+      return res.ok(res, flights);
+    })
+    .catch((err) => {
+      return res.serverError(res, err);
+    });
 }
-export default { getFlights };
+
+function getUserId(user) {
+  const userId = user.user_id;
+  return userId;
+}
+
+export default {
+  getFlights
+};

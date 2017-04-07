@@ -1,6 +1,7 @@
 import Joi from 'joi';
 
 const flightName = Joi.string().regex(/^.*\-[1-9][0-9]{0,2}$/).required();
+const userId = Joi.string().regex(/^.*\|\d{1,}$/).required();
 
 export default {
   // POST /api/users
@@ -45,6 +46,13 @@ export default {
   history: {
     params: {
       flightname: flightName
+    }
+  },
+
+  userForFlight: {
+    params: {
+      flightname: flightName,
+      userid: userId
     }
   }
 };

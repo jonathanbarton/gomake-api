@@ -72,7 +72,10 @@ function getSensorData(field) {
 }
 
 function getTransmitTime(field) {
-  const timeString = field.replace('T', ', ');
+  const rockBlockDateFormat = /^\d{2}\-\d{2}\-\d{2}/;
+  const isNonIsoDateFormat = rockBlockDateFormat.test(field);
+  const appendedTimeString = `20${field}`;
+  const timeString = (isNonIsoDateFormat) ? appendedTimeString : field;
   return new Date(timeString);
 }
 

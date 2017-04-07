@@ -1,8 +1,8 @@
 import chai from 'chai';
 import { expect } from 'chai';
 import assert from 'assert';
-const makeMockgooseConnection = require('../../tests/mongooseMock/connection');
-const Flight = require('../../models/flight');
+const makeMockgooseConnection = require('../../../tests/mongooseMock/connection');
+const Flight = require('../../../models/flight');
 const sinon = require('sinon');
 require('sinon-mongoose');
 require('sinon-as-promised');
@@ -93,18 +93,14 @@ describe('Flights', () => {
   describe('#List - Model method that returns the list of flights from the db', () => {
     it('should return the list of flights', (done) => {
       const FlightMock = sinon.mock(Flight);
-      const skip = 0;
-      const limit = 5000;
 
       FlightMock
       .expects('find')
       .chain('sort')
-      .chain('skip').withArgs(skip)
-      .chain('limit').withArgs(limit)
       .chain('exec')
       .resolves('Resolved');
 
-      Flight.list(limit, skip)
+      Flight.list('12345')
       .then((res) => {
         FlightMock.verify();
         FlightMock.restore();
@@ -114,41 +110,46 @@ describe('Flights', () => {
     });
   });
 
-  describe('#GetFlights -Ctrl method that calls the Flight model which retunrs flights', () => {
+  describe('#GetFlights -Ctrl method that calls the Flight model which returns flights', () => {
     let req;
     let res;
     let fakeData;
     let FlightController;
+    let resOkSpy;
 
     beforeEach((done) => {
-      FlightController = require('../../controllers/flights');
-      req = {};
-      res = {};
+      FlightController = require('../../../controllers/flights');
       fakeData = 11;
+      req = {
+        user: { user_id: 'google|12345' }
+      };
+      res = {
+        ok: () => {},
+        serverError: () => {}
+      };
+      resOkSpy = sinon.spy(res, 'ok');
       done();
     });
 
     afterEach((done) => {
       Flight.list.restore();
+      resOkSpy.restore();
       done();
     });
 
     it('should call Flight.list (model) method which returns data ', (done) => {
-      sinon.stub(Flight, 'list').returns({
-        then: () => {
-          const fake = 11;
-          return fake;
-        }
-      });
-      const resolvedStub = FlightController.getFlights(req, res);
-      assert.equal(resolvedStub, fakeData);
-      done();
+      sinon.stub(Flight, 'list').returns(Promise.resolve(fakeData));
+      FlightController.getFlights(req, res)
+        .then(() => {
+          assert(resOkSpy.calledWith(res, fakeData));
+          done();
+        });
     });
 
-    it('should call Flight.list (model) method with skip 0 and limit 50', (done) => {
+    it('should call Flight.list (model) method with user_id provided', (done) => {
       const spy = sinon.spy(Flight, 'list');
       FlightController.getFlights(req, res);
-      assert(spy.calledWith(50, 0));
+      assert(spy.calledWith('google|12345'));
       done();
     });
   });

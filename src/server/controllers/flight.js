@@ -1,28 +1,40 @@
 import Flight from '../models/flight';
-import contentResponse from '../helpers/APIResponse';
+import mongoErrorCodes from '../models/mongoErrorCodes';
 
-const FLIGHT_ERROR = 400;
-const FLIGHT_SUCCESS = 200;
+const NO_VALID_USERID_ERROR = 'No valid user Id present';
+const NO_VALID_FLIGHT_ERROR = 'No valid flight present';
+const MISSING_REQUIRED_PARAMS = 'Missing required parameters';
+const DUPLICATE_VALUE = 'Duplicate value';
 
 function getFlightInfo(req, res) {
   const flightName = req.params.flightname.toUpperCase();
   const getFlight = Flight.getFlightFromFlightName(flightName);
   getFlight.then((flight) => {
-    res.json(contentResponse(flight));
-  }, (error) => {
-    res.json(error);
+    res.ok(res, flight);
+  }, (err) => {
+    res.serverError(res, err);
   });
 }
 
 function postFlightInfo(req, res) {
   const flightName = req.params.flightname.toUpperCase();
   const flightInfo = parseFlightInfo(flightName, req.body);
+
+  if (!flightInfo) {
+    return res.badRequest(res, MISSING_REQUIRED_PARAMS);
+  }
+
   const newFlight = new Flight(flightInfo);
   newFlight.save((err) => {
     if (err) {
-      res.sendStatus(FLIGHT_ERROR);
+      console.log(err.code === mongoErrorCodes.DUPLICATE);
+      if (err.code === mongoErrorCodes.DUPLICATE) {
+        res.duplicateError(res, DUPLICATE_VALUE);
+      } else {
+        res.serverError(res, err);
+      }
     } else {
-      res.sendStatus(FLIGHT_SUCCESS);
+      res.ok(res);
     }
   });
 }
@@ -63,7 +75,60 @@ function isValidGeoJson(location) {
   return !!location.coordinates;
 }
 
+function putUserInFlight(req, res) {
+  const userId = getUserId(req.user);
+  if (!userId) {
+    return res.badRequest(res, NO_VALID_USERID_ERROR);
+  }
+  const dbUpdateConfig = {
+    $addToSet: {
+      userIds: userId
+    }
+  };
+  return updateFlightUsers(req, res, dbUpdateConfig);
+}
+
+function deleteUserInFlight(req, res) {
+  const userId = getUserId(req.user, res);
+  if (!userId) {
+    return res.badRequest(res, NO_VALID_USERID_ERROR);
+  }
+  const dbUpdateConfig = {
+    $pull: {
+      userIds: userId
+    }
+  };
+  return updateFlightUsers(req, res, dbUpdateConfig);
+}
+
+function updateFlightUsers(req, res, dbUpdateConfig) {
+  const flightName = req.params.flightname.toUpperCase();
+  const flightNameArray = Flight.getFlightNameArray(flightName);
+  const callSign = flightNameArray[0];
+  const flightNumber = flightNameArray[1];
+  return Flight.findOneAndUpdate({ callSign, flightNumber }, dbUpdateConfig)
+    .then((foundFlight) => {
+      if (!foundFlight) {
+        res.badRequest(res, NO_VALID_FLIGHT_ERROR);
+        return false;
+      }
+      res.ok(res);
+      return foundFlight;
+    })
+    .catch((err) => {
+      res.badRequest(res, err);
+      return err;
+    });
+}
+
+function getUserId(user) {
+  const userId = user.user_id;
+  return userId;
+}
+
 export default {
   getFlightInfo,
-  postFlightInfo
+  postFlightInfo,
+  putUserInFlight,
+  deleteUserInFlight
 };

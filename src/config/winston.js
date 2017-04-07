@@ -1,12 +1,21 @@
 import winston from 'winston';
 
-const logger = new (winston.Logger)({
-  transports: [
-    new (winston.transports.Console)({
-      json: true,
-      colorize: true
-    })
-  ]
+winston.addColors({
+  silly: 'magenta',
+  debug: 'blue',
+  audit: 'green',
+  warn: 'yellow',
+  error: 'red',
+  info: 'cyan'
 });
 
-export default logger;
+winston.remove(winston.transports.Console);
+
+winston.add(winston.transports.Console, {
+  prettyPrint: true,
+  colorize: true,
+  silent: false,
+  timestamp: true
+});
+
+export default winston;
