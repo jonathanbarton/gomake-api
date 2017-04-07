@@ -18,7 +18,7 @@ dependencies:
     - gcloud auth activate-service-account --key-file ${HOME}/client-secret.json
     - gcloud config set project $GCLOUD_PROJECT
   override:
-    - docker build --rm=false -t gcr.io/$GCLOUD_PROJECT/api:${CIRCLE_BUILD_NUM} .
+    - docker build --rm=false -t gcr.io/$GCLOUD_PROJECT/api:$CIRCLE_BUILD_NUM .
 
 deployment:
   hub:
@@ -27,4 +27,4 @@ deployment:
       - echo $CLIENT_SECRET | base64 --decode > ${HOME}/client-secret.json
       - gcloud --quiet components update app
       - gcloud auth activate-service-account --key-file ${HOME}/client-secret.json
-      - gcloud docker -- push gcr.io/${GCLOUD_PROJECT}/api:${CIRCLE_BUILD_NUM}
+      - gcloud docker -- push gcr.io/${GCLOUD_PROJECT}/api:$CIRCLE_BUILD_NUM
