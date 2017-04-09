@@ -120,16 +120,16 @@ gulp.task('pre-test', () =>
 );
 
 gulp.task('unit', ['lint','pre-test'], function() {
-  preprocessForTesting(paths.unitTests, './coverage/unit');
+  return preprocessForTesting(paths.unitTests, './coverage/unit');
 });
 
 gulp.task('integration', ['lint','pre-test'], function() {
-  preprocessForTesting(paths.integrationTests, './coverage/integration');
+  return preprocessForTesting(paths.integrationTests, './coverage/integration');
 });
 
 function preprocessForTesting(testFiles, coverageDir) {
   if (process.env.NODE_ENV !== 'prod') {
-    runTest(testFiles, coverageDir);
+    return runTest(testFiles, coverageDir);
   } else {
     util.log('You can run tests only in non prod envs');
   }

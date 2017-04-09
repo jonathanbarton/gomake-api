@@ -14,6 +14,7 @@
     "build": "gulp",
     "lint": "gulp lint",
     "test": "gulp unit",
+    "integration": "gulp integration",
     "report-coverage": "coveralls < ./coverage/lcov.info",
     "prepush": "npm test"
   },
@@ -64,6 +65,8 @@
     "path": "^0.12.7",
     "restler": "^3.4.0",
     "serve-static": "^1.11.1",
+    "superagent": "^3.5.2",
+    "superagent-prefix": "0.0.2",
     "winston": "^2.1.1"
   },
   "devDependencies": {
