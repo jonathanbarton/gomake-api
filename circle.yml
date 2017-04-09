@@ -6,6 +6,8 @@ machine:
     PYTHONPATH: ${PATH}:${HOME}/google_appengine
     # Replace this with your project ID
     GCLOUD_PROJECT: ${GCLOUD_PROJECT}
+    # Add secret to make it available for unit and integration tests
+    GM_JWT_SECRET:  echo $CLIENT_SECRET | base64 --decode > ${HOME}/client-secret.json
 
 dependencies:
   pre:
