@@ -1,12 +1,5 @@
 FROM node:6.4.0-wheezy
 
-# Pass node environment into container at run-time
-ENV NODE_ENV development
-ENV DB mongodb://localhost/express-mongoose-es6-rest-api-development
-ENV PORT 3000
-ENV JWT_SECRET 0a6b944d-d2fb-46fc-a85e-0295c986cd9f
-ENV DOCKER true
-
 # Create app directory
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
