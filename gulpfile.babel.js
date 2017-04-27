@@ -25,7 +25,6 @@ const paths = {
   js: ['src/**/*.js', '!src/server/tests/mongoMock/data.js'],
   nonJs: ['./package.json', './.gitignore'],
   unitTests: 'src/server/tests/unit/**/*.js',
-  integrationTests: 'src/server/tests/integration/**/*.js',
   templates: 'src/mockClient/views/**/*.jade',
   coverageTarget: ['src/server/**/*.js', '!src/server/tests/**/*.js', '!src/server/routes/**/*.js'],
   cwd: 'src',
@@ -123,9 +122,6 @@ gulp.task('unit', ['lint','pre-test'], function() {
   return preprocessForTesting(paths.unitTests, './coverage/unit');
 });
 
-gulp.task('integration', ['lint','pre-test'], function() {
-  return preprocessForTesting(paths.integrationTests, './coverage/integration');
-});
 
 function preprocessForTesting(testFiles, coverageDir) {
   if (process.env.NODE_ENV !== 'prod') {
