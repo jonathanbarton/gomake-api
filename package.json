@@ -14,7 +14,6 @@
     "build": "gulp",
     "lint": "gulp lint",
     "test": "gulp unit",
-    "integration": "gulp integration",
     "report-coverage": "coveralls < ./coverage/lcov.info",
     "prepush": "npm test"
   },
