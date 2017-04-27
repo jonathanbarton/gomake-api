@@ -1,15 +1,18 @@
-import request from 'supertest';
+import request from 'superagent';
 import assert from 'assert';
 import chai from 'chai';
-import app from '../../../../index';
+import _prefix from 'superagent-prefix';
+const prefix = _prefix(process.env.GM_API_BASE_URL);
+
 const generateJwtToken = require('../../utils/jwt').generateJwtToken;
 chai.config.includeStack = true;
 
 describe('#Flights ', () => {
   describe('# GET flight/:flightName', () => {
     it('should return 401 , if no jwt in request ', (done) => {
-      request(app)
+      request
         .get('/flight/DUMMY-1')
+        .use(prefix)
         .end((err, response) => {
           assert.equal(response.statusCode, 401);
           assert.equal(response.text, 'Unauthorized');
@@ -18,8 +21,9 @@ describe('#Flights ', () => {
     });
     it('should return 200 , for valid jwt ', (done) => {
       const token = generateJwtToken();
-      request(app)
+      request
         .get('/flight/DUMMY-1')
+        .use(prefix)
         .set('Authorization', `Bearer ${token}`)
         .end((err, response) => {
           assert.equal(response.statusCode, 200);
@@ -31,8 +35,9 @@ describe('#Flights ', () => {
 
   describe('# POST flight/:flightName', () => {
     it('should return 401 , if no jwt in request ', (done) => {
-      request(app)
+      request
         .post('/flight/DUMMY-1')
+        .use(prefix)
         .end((err, response) => {
           assert.equal(response.statusCode, 401);
           assert.equal(response.text, 'Unauthorized');
@@ -41,8 +46,9 @@ describe('#Flights ', () => {
     });
     it('should return 400 , for valid jwt  but missing body', (done) => {
       const token = generateJwtToken();
-      request(app)
+      request
         .post('/flight/DUMMY-1')
+        .use(prefix)
         .set('Authorization', `Bearer ${token}`)
         .end((err, response) => {
           assert.equal(response.statusCode, 400);
@@ -51,8 +57,9 @@ describe('#Flights ', () => {
     });
     it('should return 303 , for valid body but duplicate request', (done) => {
       const token = generateJwtToken();
-      request(app)
+      request
         .post('/flight/MAVERICK-1')
+        .use(prefix)
         .set('Authorization', `Bearer ${token}`)
         .send({
           callSign: 'MAVERICK',
@@ -77,8 +84,9 @@ describe('#Flights ', () => {
 
   describe('# PUT flight/:flightName/user/:userId', () => {
     it('should return 401 , if no jwt in request ', (done) => {
-      request(app)
+      request
         .put('/flight/MAVERICK-1')
+        .use(prefix)
         .end((err, response) => {
           assert.equal(response.statusCode, 401);
           assert.equal(response.text, 'Unauthorized');
@@ -89,8 +97,9 @@ describe('#Flights ', () => {
       const hasUserId = true;
       const hasExpiration = false;
       const token = generateJwtToken(hasExpiration, hasUserId);
-      request(app)
+      request
         .put('/flight/MAVERICK-1/user/google|123')
+        .use(prefix)
         .set('Authorization', `Bearer ${token}`)
         .end((err, response) => {
           assert.equal(response.statusCode, 200);
@@ -99,8 +108,9 @@ describe('#Flights ', () => {
     });
     it('should return 400 , if jwt does not have userId ', (done) => {
       const token = generateJwtToken();
-      request(app)
+      request
         .put('/flight/MAVERICK-1/user/google|123')
+        .use(prefix)
         .set('Authorization', `Bearer ${token}`)
         .end((err, response) => {
           assert.equal(response.statusCode, 400);
@@ -112,8 +122,9 @@ describe('#Flights ', () => {
       const hasUserId = true;
       const hasExpiration = false;
       const token = generateJwtToken(hasExpiration, hasUserId);
-      request(app)
+      request
         .put('/flight/MAVERICK-100/user/google|123')
+        .use(prefix)
         .set('Authorization', `Bearer ${token}`)
         .end((err, response) => {
           assert.equal(response.statusCode, 400);
@@ -124,8 +135,9 @@ describe('#Flights ', () => {
 
   describe('# DELETE flight/:flightName/user/:userId', () => {
     it('should return 401 , if no jwt in request ', (done) => {
-      request(app)
+      request
         .delete('/flight/MAVERICK-1/user/google|123')
+        .use(prefix)
         .end((err, response) => {
           assert.equal(response.statusCode, 401);
           assert.equal(response.text, 'Unauthorized');
@@ -136,8 +148,9 @@ describe('#Flights ', () => {
       const hasUserId = true;
       const hasExpiration = false;
       const token = generateJwtToken(hasExpiration, hasUserId);
-      request(app)
+      request
         .delete('/flight/MAVERICK-1/user/google|123')
+        .use(prefix)
         .set('Authorization', `Bearer ${token}`)
         .end((err, response) => {
           assert.equal(response.statusCode, 200);
@@ -146,8 +159,9 @@ describe('#Flights ', () => {
     });
     it('should return 400 , if jwt does not have userId ', (done) => {
       const token = generateJwtToken();
-      request(app)
+      request
         .delete('/flight/MAVERICK-1/user/google|123')
+        .use(prefix)
         .set('Authorization', `Bearer ${token}`)
         .end((err, response) => {
           assert.equal(response.statusCode, 400);
@@ -159,8 +173,9 @@ describe('#Flights ', () => {
       const hasUserId = true;
       const hasExpiration = false;
       const token = generateJwtToken(hasExpiration, hasUserId);
-      request(app)
+      request
         .delete('/flight/MAVERICK-100/user/google|123')
+        .use(prefix)
         .set('Authorization', `Bearer ${token}`)
         .end((err, response) => {
           assert.equal(response.statusCode, 400);
