@@ -14,7 +14,8 @@ dependencies:
     - node --version
     - npm --version
     - npm run build
-    - gcloud --quiet components update core gcloud
+    - gcloud --quiet components update core
+    - gcloud --quiet components update gcloud
     - gcloud auth activate-service-account --key-file ${HOME}/client-secret.json
     - gcloud config set project $GCLOUD_PROJECT
   override:
