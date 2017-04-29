@@ -1,4 +1,4 @@
-FROM node:6.4.0-wheezy
+FROM node:7.9.0-alpine
 
 # Create app directory
 RUN mkdir -p /usr/src/app
