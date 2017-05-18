@@ -124,13 +124,6 @@ describe('Flight', () => {
           done();
         });
     });
-
-    it('should return badRequest if no user id is present', (done) => {
-      req.user = {};
-      FlightController.putUserInFlight(req, res);
-      assert(resBadRequestSpy.calledWith(res, 'No valid user Id present'));
-      done();
-    });
   });
 
   describe('#DeleteUserInFlight', () => {
@@ -156,12 +149,6 @@ describe('Flight', () => {
           Flight.findOneAndUpdate.restore();
           done();
         });
-    });
-    it('should return bad request if no user id is present', (done) => {
-      req.user = {};
-      FlightController.deleteUserInFlight(req, res);
-      assert(resBadRequestSpy.calledWith(res, 'No valid user Id present'));
-      done();
     });
   });
 });
