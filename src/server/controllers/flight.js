@@ -1,7 +1,6 @@
 import Flight from '../models/flight';
 import mongoErrorCodes from '../models/mongoErrorCodes';
 
-const NO_VALID_USERID_ERROR = 'No valid user Id present';
 const NO_VALID_FLIGHT_ERROR = 'No valid flight present';
 const MISSING_REQUIRED_PARAMS = 'Missing required parameters';
 const DUPLICATE_VALUE = 'Duplicate value';
@@ -76,10 +75,7 @@ function isValidGeoJson(location) {
 }
 
 function putUserInFlight(req, res) {
-  const userId = getUserId(req.user);
-  if (!userId) {
-    return res.badRequest(res, NO_VALID_USERID_ERROR);
-  }
+  const userId = getUserId(req);
   const dbUpdateConfig = {
     $addToSet: {
       userIds: userId
@@ -89,10 +85,7 @@ function putUserInFlight(req, res) {
 }
 
 function deleteUserInFlight(req, res) {
-  const userId = getUserId(req.user, res);
-  if (!userId) {
-    return res.badRequest(res, NO_VALID_USERID_ERROR);
-  }
+  const userId = getUserId(req);
   const dbUpdateConfig = {
     $pull: {
       userIds: userId
@@ -121,8 +114,8 @@ function updateFlightUsers(req, res, dbUpdateConfig) {
     });
 }
 
-function getUserId(user) {
-  const userId = user.user_id;
+function getUserId(req) {
+  const userId = req.params.userid;
   return userId;
 }
 
