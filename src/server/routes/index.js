@@ -2,9 +2,9 @@ import express from 'express';
 import session from 'express-session';
 import flightRosterRoutes from './flights';
 import flightRoutes from './flight';
-// import login from '../../mockClient/routes/login';
-// import adminDashboard from '../../mockClient/routes/adminDashboard';
-// import home from '../../mockClient/routes/home';
+import login from '../../mockClient/routes/login';
+import adminDashboard from '../../mockClient/routes/adminDashboard';
+import home from '../../mockClient/routes/home';
 import authentication from '../middlewares/authentication';
 import config from '../../config/env';
 import responseSerialization from '../middlewares/responseSerialization';
@@ -32,17 +32,17 @@ router.use('/flights', authentication, flightRosterRoutes);
 router.use('/flight', authentication, flightRoutes);
 
 
-// ************** ROUTES FOR JADE APP *********************************
+/* ************* ROUTES FOR JADE APP *********************************/
 
 // routes for /login (Just needed for JADE app.Will live in app otherwise.)
-// router.use('/login', login);
+router.use('/login', login);
 
 // routes for doing all admin stuff (Just needed for JADE app Will live in app otherwise.)
-// router.use('/adminDashboard', adminDashboard);
+router.use('/adminDashboard', adminDashboard);
 
 // This is the callback route that user is taken to after auth0 authentication.
 // (Just needed for JADE app Will live in app otherwise.)
-// router.use('/home', home);
+router.use('/home', home);
 
 
 export default router;
