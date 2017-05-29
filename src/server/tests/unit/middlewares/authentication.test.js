@@ -93,7 +93,8 @@ describe('Authentication ', () => {
         assert.equal(args[1], config.jwtSecret);
         assert.deepEqual(args[2], {
           algorithms: ['HS256'],
-          type: 'JWT'
+          type: 'JWT',
+          aud: config.jwtAudience
         });
         done();
       });

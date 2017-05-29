@@ -4,6 +4,7 @@ import config from '../../config/env';
 
 const jwt = require('jsonwebtoken');
 const jwtSecret = config.jwtSecret;
+const jwtAudience = config.jwtAudience;
 const NO_TOKEN_PRESENT = 'No token present';
 
 function authentication(req, res, done) {
@@ -24,7 +25,8 @@ function parseHeader(header) {
 function jwtVerify(req, res, token, done) {
   jwt.verify(token, jwtSecret, {
     algorithms: ['HS256'],
-    type: 'JWT'
+    type: 'JWT',
+    aud: jwtAudience
   }, (err, decoded) => {
     if (err) {
       return res.authenticationFailure(res, req, err);
