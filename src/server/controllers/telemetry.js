@@ -24,7 +24,7 @@ function getTelemetry(req, res) {
 function getTelemetryForAssignedDevices(foundFlight) {
   const devices = foundFlight.deviceIds;
   return Telemetry
-    .find({ deviceId: { $in: devices } })
+    .find({ deviceId: { $in: devices }, 'location.coordinates': { $nin: [null, 0.0] } })
     .sort({ $natural: -1 })
     .limit(1);
 }

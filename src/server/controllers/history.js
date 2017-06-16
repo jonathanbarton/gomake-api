@@ -20,6 +20,7 @@ function getHistoryForAssignedDevices(startTransmitTime) {
     const startTimeAsDate = getStartTimeAsDate(startTransmitTime);
     return Telemetry.find({
       deviceId: { $in: devices },
+      'location.coordinates': { $nin: [null, 0.0] },
       transmitTime: { $gte: startTimeAsDate }
     }).sort('-transmitTime');
   };
