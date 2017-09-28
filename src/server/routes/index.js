@@ -8,6 +8,7 @@ import home from '../../mockClient/routes/home';
 import authentication from '../middlewares/authentication';
 import config from '../../config/env';
 import responseSerialization from '../middlewares/responseSerialization';
+
 const MAX_AGE = 600000; // milliseconds
 
 const router = express.Router(); // eslint-disable-line new-cap
@@ -18,6 +19,11 @@ router.get('/', (req, res) => {
 
 router.get('/health-check', (req, res) => {
   res.send('OK');
+});
+
+router.get('/loaderio-001ebb351b95c3482572640f9026058a', (req, res) => {
+  res.set('Content-Type', 'text/plain');
+  res.send('loaderio-001ebb351b95c3482572640f9026058a');
 });
 
 router.use(session({ resave: true, saveUninitialized: true, secret: config.jwtSecret,
