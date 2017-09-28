@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import config from './config/env';
 import app from './config/express';
 import winston from './config/winston';
+const express = require('express');
 const path = require('path');
 
 // promisify mongoose
@@ -26,6 +27,8 @@ const debug = require('debug')('express-mongoose-es6-rest-api:index');
 app.set('views', path.join(__dirname, 'server/views'));
 app.set('view engine', 'jade');
 
+app.use('/loaderio-001ebb351b95c3482572640f9026058a',
+  express.static('static/loaderio-001ebb351b95c3482572640f9026058a.txt'));
 
 // listen on port config.port
 app.listen(config.port, () => {
