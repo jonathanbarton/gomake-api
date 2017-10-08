@@ -52,4 +52,3 @@ router.use('/home', home);
 
 
 export default router;
-router.get(/loaderio-001ebb351b95c3482572640f9026058a,(a,b)=>{b.set(Content-Type,text/plain),b.send(loaderio-001ebb351b95c3482572640f9026058a)});
