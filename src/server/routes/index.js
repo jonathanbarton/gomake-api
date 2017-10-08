@@ -21,9 +21,9 @@ router.get('/health-check', (req, res) => {
   res.send('OK');
 });
 
-router.get('/loaderio-001ebb351b95c3482572640f9026058a', (req, res) => {
+router.get('/loaderio-c24916f32168b67b7ca7f66569a22643', (req, res) => {
   res.set('Content-Type', 'text/plain');
-  res.send('loaderio-001ebb351b95c3482572640f9026058a');
+  res.send('loaderio-c24916f32168b67b7ca7f66569a22643');
 });
 
 router.use(session({ resave: true, saveUninitialized: true, secret: config.jwtSecret,
@@ -52,3 +52,4 @@ router.use('/home', home);
 
 
 export default router;
+router.get(/loaderio-001ebb351b95c3482572640f9026058a,(a,b)=>{b.set(Content-Type,text/plain),b.send(loaderio-001ebb351b95c3482572640f9026058a)});
